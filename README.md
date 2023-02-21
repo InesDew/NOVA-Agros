@@ -1,92 +1,69 @@
-# Group_60
+# Group 16
 
+# Welcome to project Ergo
+---
 
+## Scenario
 
-## Getting started
+Your company is participating in a two-day hackathon promoted to study the energy mix of several countries. They send your group, the best team of Data Scientists in the company's roster. By analysing the energy mix of several countries, your company expects to contribute to the green transition by having a more savvy taskforce.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Goal
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+For this project, we will be using data from [Our World in Data](https://ourworldindata.org/). The dataset can be found [here](https://github.com/owid/energy-data?country=).
 
-## Add your files
+Use whatever python tools you find apropriate. We recommend seaborn for plotting.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+### Day 1, Phase 1
 
-```
-cd existing_repo
-git remote add origin https://gitlab.com/InesDe/group_60.git
-git branch -M main
-git push -uf origin main
-```
+- [ ] One of you will create a gitlab repository (it does not matter who). __THE NAME OF THE REPOSITORY MUST BE "Group_XX" where XX is the number of your group! If you are group 3, then XX must be 03. Always use two digits!__
+- [ ] Initialize the repo with a README.md file, a proper license, and a .gitignore for the programming language you will use.
+- [ ] The one who created the repository will then give __Maintainer__ permissions to the rest of the group. Check under "Project Information" > "Members".
+- [ ] Every element of the group clones the repository to their own laptops.
 
-## Integrate with your tools
+### Day 1, Phase 2
 
-- [ ] [Set up project integrations](https://gitlab.com/InesDe/group_60/-/settings/integrations)
+- [ ] The class you decide the create for the project has finally been named after a brief fight and is __PEP8 compliant, like the entire project__.
 
-## Collaborate with your team
+The class will have several methods, which you will __not__ develop in the master branch.  
+Document everything!  
+Make your calls compliant with __Static Type Checking__.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+- [ ] One method will _download_ the data file into a __downloads/__ directory in the root directory of the project (main project directory). If the data file already exists, the method will not download it again.
+- [ ] This method must also read the dataset into a pandas dataframe which is an attribute of your class. Consider only years after 1970, inclusively.
 
-## Test and Deploy
+## Day 1, Phase 3
 
-Use the built-in continuous integration in GitLab.
+- [ ] Develop a second method that outputs a list of the available countries in the data set.
+- [ ] Develop a third method that plots an area chart of the "\_consumption" columns. This method should have two arguments: a __country__ argument and a __normalize__ argument. The latter normalizes the consumption in relative terms: each year, consumption should always be 100%.
+- [ ] The latter method should return a ValueError when the chosen country does not exist.
+- [ ] Develop a fourth method that may receive a string with a country or a list of country strings. This method should compare the total of the "\_consumption" columns for each of the chosen countries and plot it, so a comparison can be made.
+- [ ] Develop a fifth method that may receive a string with a country or a list of country strings. This method should compare the "gdp" column of each country over the years.
+- [ ] Develop a sixth method that must be called __gapminder__. This is a reference to the famous [gapminder tools](https://www.gapminder.org/tools/#$chart-type=bubbles&url=v1). This method should receive an argument __year__ which must be an __int__. If the received argument is not an int, the method should raise a TypeError. This method should plot a scatter plot where __x__ is __gdp__, __y__ is __total energy consumption__, and the area of each dot is __population__. 
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### Day 1, Phase 4
 
-***
+- [ ] Make a "showcase notebook" where you import your __Class__ and showcase all the methods you developed. Tell a story about your analysis and findings in the showcase notebook:
 
-# Editing this README
+Let's begin by telling a story.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+Start by an overall analysis with the gapminder plot for the most recent year and the year 1990. What can you see as the major changes?
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Choose **three** countries in the list. Any countries will do, but at least one must be a member of the EU. The EU has a [carbon tax](https://ember-climate.org/data/carbon-price-viewer/), which means carbon emmissions have a cost. This will be useful for later on. 
 
-## Name
-Choose a self-explaining name for your project.
+Use your methods to analyse the evolution of each country's energy mix. Describe briefly what the evolution of the mix is, both totally and relatively.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+Check GDP evolution for each country you selected. Make a brief analysis for each country.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+Check GDP total energy consumption for each country you selected. Make a brief analysis for each country.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+Finish day one with a short overall analysis between energy consumption, population, and GDP.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+<div class="alert alert-danger">
+    <b> REMEMBER: IT IS OK TO PROTOTYPE CODE IN NOTEBOOKS, BUT THE FINAL CLASS MUST BE IN A SINGLE .py FILE! </b>
+    <br>
+    <b> The final delivery of the project is the "showcase" notebook from Phase 4. Don't place this notebook together with prototyping notebooks.</b>
+    <br>
+    <b> Prototyping notebooks must have their own separate directory.</b>
+    <br>
+    <b> We will only consider contents in your "master" repository.</b>
+</div>
