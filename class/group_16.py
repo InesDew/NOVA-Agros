@@ -33,8 +33,15 @@ class MyClass:
             f.write(response.text)
 
         #5. Read the dataset.csv file into a pandas dataframe and make it an attribute of our class (self.data)
+        #6. Only take into account data after 1970 (1970 included)
         dataframe = pd.read_csv(file_path)
+        dataframe = dataframe[dataframe["year"]>=1970]
         self.data = dataframe
+        
+
+        
+
+
 
 ## Method 2:
 ############
@@ -84,3 +91,4 @@ class MyClass:
 
 object_1 = MyClass()
 object_1.data_setup()
+print(object_1.data)
