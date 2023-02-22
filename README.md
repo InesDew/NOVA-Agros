@@ -1,5 +1,10 @@
 # Group 16
 
+53676 Celina Kollwitz
+55577 Helena Krumm
+55913 Ronja Suhling
+55944 Ines Dewever
+
 # Welcome to project Agros
 ---
 
