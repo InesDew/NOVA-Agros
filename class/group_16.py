@@ -25,7 +25,7 @@ class MyClass:
             os.mkdir(full_path)
 
         #3. This is the url where our dataset is located online
-        url = "https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.csv"
+        url = "https://raw.githubusercontent.com/owid/owid-datasets/master/datasets/Agricultural%20total%20factor%20productivity%20(USDA)/Agricultural%20total%20factor%20productivity%20(USDA).csv"
         #4. We download the info from this url using the requests library and put the response.text in a csv file dataset.csv that we create in the downloads dir
         response = requests.get(url)
         file_path = os.path.join(full_path,'dataset.csv')
@@ -35,7 +35,7 @@ class MyClass:
         #5. Read the dataset.csv file into a pandas dataframe and make it an attribute of our class (self.data)
         #6. Only take into account data after 1970 (1970 included)
         dataframe = pd.read_csv(file_path)
-        dataframe = dataframe[dataframe["year"]>=1970]
+        dataframe = dataframe[dataframe["Year"]>=1970]
         self.data = dataframe
         
 
