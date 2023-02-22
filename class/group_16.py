@@ -1,6 +1,8 @@
 import pandas as pd
 import requests
 import os
+import seaborn as sns
+import matplotlib as plt
 
 ## This is the python file for our class that will have several methods
 class Agros:
@@ -79,13 +81,8 @@ class Agros:
 
 ## Method 6:
 ############
-import seaborn as sns
-import matplotlib.pyplot as plt
 
-sns.set(style="whitegrid")
-
-
-    def gapminder(year: int):
+    def gapminder(self, year: int):
         """
         Visualizes the relation between the usage of fertilizer, animal feed and the output for a
         given year. The variable 'animal_feed_quantity' was chosen because it showed the highest
@@ -105,22 +102,22 @@ sns.set(style="whitegrid")
         -------
         >>> gapminder(1990)
         """
+        sns.set(style="whitegrid")
+
         if isinstance(year) != int:
             raise TypeError("The given argument 'year' is not int.")
 
-        fertilizer = dataframe[dataframe["Year"] == year]["fertilizer_quantity"]
-        output = dataframe[dataframe["Year"] == year]["output_quantity"]
-        area = dataframe[dataframe["Year"] == year]["animal_feed_quantity"]
+        fertilizer = self.data[self.data["Year"] == year]["fertilizer_quantity"]
+        output = self.data[self.data["Year"] == year]["output_quantity"]
+        area = self.data[self.data["Year"] == year]["animal_feed_quantity"]
 
         sns.scatterplot(x=fertilizer, y=output, size=area, sizes=(1, 300))
-        plt.title(
-            "Understanding the relation of usage of fertilizer, animal feed and the output"
-        )
+        plt.title("Understanding the relation of usage of fertilizer, animal feed and the output")
         plt.xlabel("Fertilizer Quantity")
         plt.ylabel("Output Quantity")
         plt.legend(title="Animal Feed", loc="lower right")
         plt.show()
 
-object_1 = MyClass()
+object_1 = Agros()
 object_1.data_setup()
 print(object_1.data)
