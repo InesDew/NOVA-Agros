@@ -14,6 +14,7 @@ class Agros:
     def __init__(self):
         self.data = None
 
+    sns.set(style="whitegrid")
 ## Method 1:
 ############
 
@@ -63,11 +64,11 @@ class Agros:
         # Generate a mask for the upper triangle
         mask = np.triu(np.ones_like(corr, dtype=bool))
         # Set up the matplotlib figure
-        f, ax = plt.subplots(figsize=(11, 9))
+        f, ax = plt.subplots(figsize=(12, 10))
         # Generate a custom diverging colormap
         cmap = sns.diverging_palette(230, 20, as_cmap=True)
         # Draw the heatmap with the mask and correct aspect ratio
-        sns.heatmap(corr, mask=mask, cmap=cmap, vmax=.3, center=0, square=True, linewidths=.5, cbar_kws={"shrink": .5})
+        sns.heatmap(corr, annot=True, mask=mask, cmap=cmap)
 
 
 ## Method 4:
@@ -117,9 +118,8 @@ class Agros:
         -------
         >>> gapminder(1990)
         """
-        sns.set(style="whitegrid")
 
-        if isinstance(year) != int:
+        if isinstance(year, int) is False:
             raise TypeError("The given argument 'year' is not int.")
 
         fertilizer = self.data[self.data["Year"] == year]["fertilizer_quantity"]
@@ -132,7 +132,3 @@ class Agros:
         plt.ylabel("Output Quantity")
         plt.legend(title="Animal Feed", loc="lower right")
         plt.show()
-
-object_1 = Agros()
-object_1.data_setup()
-print(object_1.data)
