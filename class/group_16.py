@@ -73,34 +73,66 @@ class Agros:
 ## Method 4:
 ############
 
-#input: a country or a list of countries (in string format)
+# Plots an area chart of the distinct "_output_" columns
+# The X-axis should be the Year. 
 
-#compare the total of the "_consumption" columns for each of the chosen countries
+# Method should have two arguments: a country argument and a normalize argument. 
+# The country argument, when receiving NONE or 'World' should plot the sum for all distinct countries. 
+# The normalize argument, if True, normalizes the output in relative terms: each year, output should always be 100%. 
 
-# plot it
+# The method should return a ValueError when the chosen country does not exist.
 
 
 ## Method 5:
 ############
 
-#input: a country or a list of countries (in string format)
+# Input: a country or a list of countries (in string format)
 
-#compare the "gdp" column of each country over the years
+# Compare the total of the "_output_" columns for each of the chosen countries
+
+# Plot it
+# The X-axis should be the Year
 
 
 ## Method 6:
 ############
 
-#called gapminder
+    def gapminder(self, year: int):
+        """
+        Visualizes the relation between the usage of fertilizer, animal feed and the output for a
+        given year. The variable 'animal_feed_quantity' was chosen because it showed the highest
+        correlation with the 'output_quantity' variable next to 'fertilizer_quantity'.
 
-#input: a year (in integer format)
-#If it is not an integer, the method should raise a TypeError
+        Parameters
+        ----------
+        year : int
+            The year for which the data will be visualized.
 
-# Scatter plot where x is fertilizer_quantity, y is output_quantity, and the area of each dot should be a third relevant variable you find with exploration of the data.
+        Raises
+        ------
+        TypeError
+            If the argument 'year' is not an integer.
 
+        Example
+        -------
+        >>> gapminder(1990)
+        """
+        sns.set(style="whitegrid")
 
-# Calling of the methods
-########################
+        if isinstance(year) != int:
+            raise TypeError("The given argument 'year' is not int.")
+
+        fertilizer = self.data[self.data["Year"] == year]["fertilizer_quantity"]
+        output = self.data[self.data["Year"] == year]["output_quantity"]
+        area = self.data[self.data["Year"] == year]["animal_feed_quantity"]
+
+        sns.scatterplot(x=fertilizer, y=output, size=area, sizes=(1, 300))
+        plt.title("Understanding the relation of usage of fertilizer, animal feed and the output")
+        plt.xlabel("Fertilizer Quantity")
+        plt.ylabel("Output Quantity")
+        plt.legend(title="Animal Feed", loc="lower right")
+        plt.show()
+
 object_1 = Agros()
 object_1.data_setup()
-object_1.correlate_quantities()
+print(object_1.data)
