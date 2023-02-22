@@ -3,7 +3,7 @@ import requests
 import os
 
 ## This is the python file for our class that will have several methods
-class MyClass:
+class Agros:
 
 ## Innit method:
 ################
@@ -35,12 +35,7 @@ class MyClass:
         #5. Read the dataset.csv file into a pandas dataframe and make it an attribute of our class (self.data)
         #6. Only take into account data after 1970 (1970 included)
         dataframe = pd.read_csv(file_path)
-        dataframe = dataframe[dataframe["Year"]>=1970]
         self.data = dataframe
-        
-
-        
-
 
 
 ## Method 2:
@@ -52,31 +47,34 @@ class MyClass:
 ## Method 3:
 ############
 
-#Plot an area chart of consumption (columns biofuel_consumption, coal_consumption, fossil_fuel_consumption, gas_consumption, 
-# hydro_consumption, low_carbon_consumption, nuclear_consumption, oil_consumption, other_renewable_consumption, primary_energy_consumption, 
-# renewables_consumption, solar_consumption, wind_consumption)
+# Plots a way to correlate the "_quantity" columns (14 columns)
+# output_quantity,crop_output_quantity,animal_output_quantity,fish_output_quantity,ag_land_quantity,labor_quantity,capital_quantity,
+# machinery_quantity,livestock_quantity,fertilizer_quantity,animal_feed_quantity,cropland_quantity,pasture_quantity,irrigation_quantity
 
-#needs a country argument and a normalize argument
-
-#return a ValueError when the chosen country does not exist
 
 
 ## Method 4:
 ############
 
-#input: a country or a list of countries (in string format)
+# Plots an area chart of the distinct "_output_" columns
+# The X-axis should be the Year. 
 
-#compare the total of the "_consumption" columns for each of the chosen countries
+# Method should have two arguments: a country argument and a normalize argument. 
+# The country argument, when receiving NONE or 'World' should plot the sum for all distinct countries. 
+# The normalize argument, if True, normalizes the output in relative terms: each year, output should always be 100%. 
 
-# plot it
+# The method should return a ValueError when the chosen country does not exist.
 
 
 ## Method 5:
 ############
 
-#input: a country or a list of countries (in string format)
+# Input: a country or a list of countries (in string format)
 
-#compare the "gdp" column of each country over the years
+# Compare the total of the "_output_" columns for each of the chosen countries
+
+# Plot it
+# The X-axis should be the Year
 
 
 ## Method 6:
@@ -84,11 +82,14 @@ class MyClass:
 
 #called gapminder
 
-#input: a year (in integer format)
-#If it is not an integer, the method should raise a TypeError
+# Input: a year (in integer format)
+# If it is not an integer, the method should raise a TypeError
 
-#scatter plot where x is gdp, y is total energy consumption, and the area of each dot is population.
+# Scatter plot where x is fertilizer_quantity, y is output_quantity, and the area of each dot should be a third relevant variable you find with exploration of the data.
 
+
+# Calling of the methods
+########################
 object_1 = MyClass()
 object_1.data_setup()
 print(object_1.data)
