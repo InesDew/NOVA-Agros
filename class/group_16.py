@@ -55,7 +55,7 @@ class Agros:
 #Plot an area chart of consumption (columns biofuel_consumption, coal_consumption, fossil_fuel_consumption, gas_consumption, 
 # hydro_consumption, low_carbon_consumption, nuclear_consumption, oil_consumption, other_renewable_consumption, primary_energy_consumption, 
 # renewables_consumption, solar_consumption, wind_consumption)
-    def correlate__quantities(self):
+    def correlate_quantities(self):
         # Correlation between different variables
         corr = self.data[["output_quantity","crop_output_quantity","animal_output_quantity","fish_output_quantity","ag_land_quantity","labor_quantity",
                          "capital_quantity","machinery_quantity","livestock_quantity","fertilizer_quantity","animal_feed_quantity","cropland_quantity",
@@ -103,4 +103,4 @@ class Agros:
 ########################
 object_1 = Agros()
 object_1.data_setup()
-object_1.correlate__quantities()
+object_1.correlate_quantities()
