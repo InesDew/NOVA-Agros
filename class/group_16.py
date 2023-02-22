@@ -1,8 +1,10 @@
 import pandas as pd
 import requests
 import os
+import numpy as np
+import matplotlib.pyplot as plt
 import seaborn as sns
-import matplotlib as plt
+from string import ascii_letters
 
 ## This is the python file for our class that will have several methods
 class Agros:
@@ -40,6 +42,7 @@ class Agros:
         self.data = dataframe
 
 
+
 ## Method 2:
 ############
 
@@ -49,10 +52,22 @@ class Agros:
 ## Method 3:
 ############
 
-# Plots a way to correlate the "_quantity" columns (14 columns)
-# output_quantity,crop_output_quantity,animal_output_quantity,fish_output_quantity,ag_land_quantity,labor_quantity,capital_quantity,
-# machinery_quantity,livestock_quantity,fertilizer_quantity,animal_feed_quantity,cropland_quantity,pasture_quantity,irrigation_quantity
-
+#Plot an area chart of consumption (columns biofuel_consumption, coal_consumption, fossil_fuel_consumption, gas_consumption, 
+# hydro_consumption, low_carbon_consumption, nuclear_consumption, oil_consumption, other_renewable_consumption, primary_energy_consumption, 
+# renewables_consumption, solar_consumption, wind_consumption)
+    def correlate_quantities(self):
+        # Correlation between different variables
+        corr = self.data[["output_quantity","crop_output_quantity","animal_output_quantity","fish_output_quantity","ag_land_quantity","labor_quantity",
+                         "capital_quantity","machinery_quantity","livestock_quantity","fertilizer_quantity","animal_feed_quantity","cropland_quantity",
+                         "pasture_quantity","irrigation_quantity"]].corr()
+        # Generate a mask for the upper triangle
+        mask = np.triu(np.ones_like(corr, dtype=bool))
+        # Set up the matplotlib figure
+        f, ax = plt.subplots(figsize=(11, 9))
+        # Generate a custom diverging colormap
+        cmap = sns.diverging_palette(230, 20, as_cmap=True)
+        # Draw the heatmap with the mask and correct aspect ratio
+        sns.heatmap(corr, mask=mask, cmap=cmap, vmax=.3, center=0, square=True, linewidths=.5, cbar_kws={"shrink": .5})
 
 
 ## Method 4:
