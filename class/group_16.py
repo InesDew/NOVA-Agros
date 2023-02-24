@@ -47,7 +47,21 @@ class Agros:
 ## Method 2:
 ############
 
-# Show a list of all available countries in the dataset
+    # Show a list of all available countries in the dataset
+    def country_list (self):
+        """
+        Receive a list of countries from the data
+        
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        country_list : list
+        """
+        countries = self.data["country"]
+        return countries.tolist()
 
 
 ## Method 3:
@@ -93,6 +107,36 @@ class Agros:
 
 # Plot it
 # The X-axis should be the Year
+
+    def output_over_time(self, countries):
+        """
+        Receive a string with a country or a list of country strings 
+        and compare the total of the "\_output_" columns of each country 
+        over the years.
+        """
+        
+        """
+        Parameters
+        ----------
+        countries : list of strings
+            A list of countries included in the output per country dataframe
+            
+        Returns
+        -------
+        Bar Plot: 
+            Shows the output for each of the chosen countries.
+            
+        """
+        df = pd.concat([self.data["country"], self.data.filter(
+            regex="\_output_", axis=1)], axis=1)
+        df = df.groupy("country").sum()
+        labels_new = []# add countries!
+        df = df.drop(labels=labels_new, axis=0)
+        df["total_output"] = df.sum()
+        df = df.loc[countries]
+        
+        return df.reset_index().plot.bar(x="year", y="total_output")
+
 
 
 ## Method 6:
