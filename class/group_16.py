@@ -15,6 +15,8 @@ class Agros:
         self.data = None
 
     sns.set(style="whitegrid")
+
+
 ## Method 1:
 ############
 
@@ -41,7 +43,6 @@ class Agros:
         #6. Only take into account data after 1970 (1970 included)
         dataframe = pd.read_csv(file_path)
         self.data = dataframe
-
 
 
 ## Method 2:
