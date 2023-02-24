@@ -49,7 +49,7 @@ class Agros:
 ############
 
     # Show a list of all available countries in the dataset
-    def country_list (self):
+    def country_list(self):
         """
         Receive a list of countries from the data
         
@@ -61,7 +61,7 @@ class Agros:
         -------
         country_list : list
         """
-        countries = self.data["country"]
+        countries = self.data["Entity"].unique()
         return countries.tolist()
 
 
@@ -128,16 +128,18 @@ class Agros:
             Shows the output for each of the chosen countries.
             
         """
-        df = pd.concat([self.data["country"], self.data.filter(
-            regex="\_output_", axis=1)], axis=1)
-        df = df.groupy("country").sum()
-        labels_new = []# add countries!
-        df = df.drop(labels=labels_new, axis=0)
-        df["total_output"] = df.sum()
-        df = df.loc[countries]
+        df = pd.concat([self.data[["Entity","Year"]], self.data.filter(regex="\_output_", axis=1)], axis=1)
+        df = df.groupby(["Entity","Year"]).sum()
+        df["total_output"] = df.sum(axis=1)
+        df = df.loc[countries,:]
         
-        return df.reset_index().plot.bar(x="year", y="total_output")
-
+        year = df.index('Year').get_level_values()
+        country = df.index('Entity').get_level_values()
+        sns.barplot(data=df, x=year, y="total_output", hue=country)
+        plt.xlabel("Year")
+        plt.ylabel("Total output")
+        plt.title("Comparing the total output of countries")
+        plt.show()
 
 
 ## Method 6:
