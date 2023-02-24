@@ -15,6 +15,8 @@ class Agros:
         self.data = None
 
     sns.set(style="whitegrid")
+
+
 ## Method 1:
 ############
 
@@ -43,11 +45,24 @@ class Agros:
         self.data = dataframe
 
 
-
 ## Method 2:
 ############
 
 # Show a list of all available countries in the dataset
+def country_list (self):
+    """
+    Receive a list of countries from the data
+    
+    Parameters
+    ----------
+    None
+    
+    Returns
+    -------
+    country_list : list
+    """
+    countries = self.data["country"]
+    return countries.tolist()
 
 
 ## Method 3:
