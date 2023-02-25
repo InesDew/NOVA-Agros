@@ -117,18 +117,20 @@ class Agros:
             raise ValueError("ValueError: country not in dataset")
         
         # The country argument, when receiving NONE or 'World' should plot the sum for all distinct countries.    
-        if country = None or country = 'World':
+        if country is None or country == 'World':
             df = self.data.groupby(['Year'], as_index=False).sum()
         else: 
             # Filters only rows with country
             df = self.data[self.data['Country'] == country]
         
+        df_pivot = df.pivot(index='Year', columns='_output_', values='Value')
+
         if normalize is True:
             df_pivot = df_pivot.div(df_pivot.sum(axis=1), axis=0) * 100
-            df_pivot.plot.area()
+            plt = df_pivot.plot.area()
         
         else:
-            return df.plot.area('year', stacked=True)
+            plt = df.plot.area('year', stacked=True)
         
         # Plots an area chart of the distinct "_output_" columns
         # The X-axis should be the Year. 
