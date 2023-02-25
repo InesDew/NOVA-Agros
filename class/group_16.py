@@ -98,11 +98,20 @@ class Agros:
 
 # The method should return a ValueError when the chosen country does not exist.
 
-    def output_area_plot(self, country = None, normalize):
+    def output_area_plot(self, country = None, normalize = False):
         """
         Returns an area chart of the distinct "_output_" columns for a selected country 
         
+        Parameters
+        ----------
+        country
+        normalize
+        
+        Returns
+        -------
+        area chart of the distinct "_output_" columns for a selected country
         """
+
         # The method should return a ValueError when the chosen country does not exist.
         if country not in self.countries_list():
             raise ValueError("ValueError: country not in dataset")
