@@ -98,6 +98,37 @@ class Agros:
 
 # The method should return a ValueError when the chosen country does not exist.
 
+    def output_area_plot(self, country = None, normalize):
+        """
+        Returns an area chart of the distinct "_output_" columns for a selected country 
+        
+        """
+        # The method should return a ValueError when the chosen country does not exist.
+        if country not in self.countries_list():
+            raise ValueError("ValueError: country not in dataset")
+        
+        # The country argument, when receiving NONE or 'World' should plot the sum for all distinct countries.    
+        if country = None or country = 'World':
+            df = self.data.groupby(['Year'], as_index=False).sum()
+        else: 
+            # Filters only rows with country
+            df = self.data[self.data['Country'] == country]
+        
+        if normalize is True:
+            df_pivot = df_pivot.div(df_pivot.sum(axis=1), axis=0) * 100
+            df_pivot.plot.area()
+        
+        else:
+            return df.plot.area('year', stacked=True)
+        
+        # Plots an area chart of the distinct "_output_" columns
+        # The X-axis should be the Year. 
+        plt.title(f"Output by Year ({country if country else 'World'})")
+        plt.xlabel("Year")
+        plt.ylabel("Output")
+
+        plt.show()
+
 
 ## Method 5:
 ############
