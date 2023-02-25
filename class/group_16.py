@@ -130,7 +130,7 @@ class Agros:
             plt = df_pivot.plot.area()
         
         else:
-            plt = df.plot.area('year', stacked=True)
+            plt = df_pivot.plot.area('year', stacked=True)
         
         # Plots an area chart of the distinct "_output_" columns
         # The X-axis should be the Year. 
