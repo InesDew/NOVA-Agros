@@ -88,15 +88,13 @@ class Agros:
 
 ## Method 4:
 ############
-
 # Plots an area chart of the distinct "_output_" columns
 # The X-axis should be the Year. 
-
 # Method should have two arguments: a country argument and a normalize argument. 
 # The country argument, when receiving NONE or 'World' should plot the sum for all distinct countries. 
 # The normalize argument, if True, normalizes the output in relative terms: each year, output should always be 100%. 
-
 # The method should return a ValueError when the chosen country does not exist.
+
 def output_area_plot(self, country=None, normalize=False):
     """
     Returns an area chart of the distinct "_output_" columns for a selected country
@@ -104,7 +102,11 @@ def output_area_plot(self, country=None, normalize=False):
     Parameters
     ----------
     country : string
-    normalize B boolean
+        defines selected country
+        when receiving none, or 'World', sum of all distinct countries is plotted
+        returns ValueError if chosen country doesn't excist
+    normalize : boolean
+        if true, normalizes the output in relative terms, output is 100% each year
 
     Returns
     -------
@@ -113,22 +115,20 @@ def output_area_plot(self, country=None, normalize=False):
 
     # The method should return a ValueError when the chosen country does not exist.
     if country not in self.countries_list():
-        raise ValueError("ValueError: country not in dataset")
+        raise ValueError("ValueError: Country not in dataset.")
 
     # The country argument, when receiving NONE or 'World' should plot the sum for all distinct countries.
     if country is None or country == 'World':
-        df = self.data.groupby(['Year'], as_index=False).sum()
+        df = self.data.groupby(['Year'], as_index=False)['output'].sum()
     else:
         # Filters only rows with country
-        df = self.data[self.data['Country'] == country]
-
-    df_pivot = df.pivot(index='Year', columns='_output_', values='Value')
+        df = self.data[self.data['Country'] == country].groupby(['Year'], as_index=False)['output'].sum()
 
     if normalize is True:
-        df_pivot = df_pivot.div(df_pivot.sum(axis=1), axis=0) * 100
-        plt = df_pivot.plot.area()
+        df_norm = df.div(df_pivot.sum(axis=1), axis=0) * 100
+        plt = df_norm.plot.area()
     else:
-        plt = df_pivot.plot.area('year', stacked=True)
+        plt = df.plot.area('year', stacked=True)
 
     # Plots an area chart of the distinct "_output_" columns
     # The X-axis should be the Year.
