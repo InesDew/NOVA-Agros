@@ -2,7 +2,7 @@ import pandas as pd
 import requests
 import os
 import numpy as np
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 import seaborn as sns
 from string import ascii_letters
 
@@ -114,30 +114,32 @@ class Agros:
         """
 
         # The method should return a ValueError when the chosen country does not exist.
-        if country not in self.countries_list():
+        if country not in self.country_list():
             raise ValueError("ValueError: Country not in dataset.")
 
         # The country argument, when receiving NONE or 'World' should plot the sum for all distinct countries.
         if country is None or country == 'World':
+            country = 'World'
             df = self.data.groupby(['Year'], as_index=False)['output'].sum()
         else:
             # Filters only rows with country
-            df = self.data[self.data['Country'] == country].groupby(['Year'], as_index=False)['output'].sum()
+            df = self.data[self.data['Entity'] == country].groupby(['Year'], as_index=False)['output'].sum()
 
         if normalize is True:
-            df_norm = df.div(df_pivot.sum(axis=1), axis=0) * 100
-            plt = df_norm.plot.area()
+            df_norm = df.div(df.sum(axis=1), axis=0) * 100
+            plt.stackplot(df_norm["Year"], df_norm["output"])
+            #graph = df_norm.plot.area()
         else:
-            plt = df.plot.area('year', stacked=True)
+            plt.stackplot(df["Year"], df["output"])
+            #graph = df.plot.area("Year", stacked=True)
     
         # Plots an area chart of the distinct "_output_" columns
         # The X-axis should be the Year.
-        plt.title(f"Output by Year ({country if country else 'World'})")
+        plt.title(f"Output by Year ({country})")
         plt.xlabel("Year")
         plt.ylabel("Output")
 
         plt.show()
-
 ## Method 5:
 ############
 
@@ -168,13 +170,17 @@ class Agros:
             
         """
         df = pd.concat([self.data[["Entity","Year"]], self.data.filter(regex="\_output_", axis=1)], axis=1)
+        print(df)
         df = df.groupby(["Entity","Year"]).sum().reset_index()
+        print(df)
         df["total_output"] = df.sum(axis=1)
+        print(df)
         
         if isinstance(countries, list) is False:
             countries = list(countries.split(" "))
         df = df[df["Entity"].isin(countries)]
         
+        print(df)
         year = df["Year"]
         country = df["Entity"]
         sns.lineplot(data=df, x=year, y="total_output", hue=country)
@@ -221,3 +227,8 @@ class Agros:
         plt.ylabel("Output Quantity")
         plt.legend(title="Animal Feed", loc="lower right")
         plt.show()
+
+obj = Agros()
+obj.data_setup()
+countries = ["Albania","Belgium"]
+obj.output_over_time(countries)
