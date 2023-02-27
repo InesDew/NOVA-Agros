@@ -126,6 +126,38 @@ class Agros:
             df = self.data[self.data['Entity'] == country].groupby(['Year'], as_index=False)['output'].sum()
 
         if normalize is True:
+            #df_norm = df.div(df.sum(axis=1), axis=0) * 100
+            df['output_normalized'] = df['output'].apply(lambda x: x / df['output'].max())*100
+            plt.stackplot(df["Year"], df["output_normalized"])
+            #graph = df_norm.plot.area()
+        else:
+            plt.stackplot(df["Year"], df["output"])
+            #graph = df.plot.area("Year", stacked=True)
+    
+        # Plots an area chart of the distinct "_output_" columns
+        # The X-axis should be the Year.
+        plt.title(f"Output by Year ({country})")
+        plt.xlabel("Year")
+        plt.ylabel("Output")
+
+        plt.show()
+
+
+
+
+        # The method should return a ValueError when the chosen country does not exist.
+        if country not in self.country_list():
+            raise ValueError("ValueError: Country not in dataset.")
+
+        # The country argument, when receiving NONE or 'World' should plot the sum for all distinct countries.
+        if country is None or country == 'World':
+            country = 'World'
+            df = self.data.groupby(['Year'], as_index=False)['output'].sum()
+        else:
+            # Filters only rows with country
+            df = self.data[self.data['Entity'] == country].groupby(['Year'], as_index=False)['output'].sum()
+
+        if normalize is True:
             df_norm = df.div(df.sum(axis=1), axis=0) * 100
             plt.stackplot(df_norm["Year"], df_norm["output"])
             #graph = df_norm.plot.area()
