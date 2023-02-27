@@ -170,17 +170,13 @@ class Agros:
             
         """
         df = pd.concat([self.data[["Entity","Year"]], self.data.filter(regex="\_output_", axis=1)], axis=1)
-        print(df)
         df = df.groupby(["Entity","Year"]).sum().reset_index()
-        print(df)
         df["total_output"] = df.sum(axis=1)
-        print(df)
         
         if isinstance(countries, list) is False:
             countries = list(countries.split(" "))
         df = df[df["Entity"].isin(countries)]
         
-        print(df)
         year = df["Year"]
         country = df["Entity"]
         sns.lineplot(data=df, x=year, y="total_output", hue=country)
@@ -227,8 +223,3 @@ class Agros:
         plt.ylabel("Output Quantity")
         plt.legend(title="Animal Feed", loc="lower right")
         plt.show()
-
-obj = Agros()
-obj.data_setup()
-countries = ["Albania","Belgium"]
-obj.output_over_time(countries)
