@@ -78,25 +78,37 @@ class Agros:
         area chart of the distinct "_output_" columns for a selected country
         """
 
-        if country not in self.country_list():
+        if country != None  and country not in self.country_list():
             raise ValueError("ValueError: Country not in dataset.")
 
-        if country is None or country == 'World':
-            country = 'World'
-            df = self.data.groupby(['Year'], as_index=False)['output'].sum()
+        if country == None or country == 'World':
+            country = 'the World'
+            df = self.data.groupby(['Year'], as_index=False)['crop_output_quantity', 'animal_output_quantity', 'fish_output_quantity'].sum()
+            
         else:
-            df = self.data[self.data['Entity'] == country].groupby(['Year'], as_index=False)['output'].sum()
-
+            df = self.data[self.data['Entity'] == country].groupby(['Year'], as_index=False)['crop_output_quantity', 'animal_output_quantity', 'fish_output_quantity'].sum()
+        
         if normalize is True:
-            df['output_normalized'] = df['output'].apply(lambda x: x / df['output'].max())*100
-            plt.stackplot(df["Year"], df["output_normalized"])
+            df_output = df[['crop_output_quantity', 'animal_output_quantity', 'fish_output_quantity']].apply(lambda x: x / x.sum() * 100, axis=1)
+            df_norm = pd.concat([df['Year'], df_output], axis=1)
+            plt.stackplot(df_norm['Year'], df_norm['crop_output_quantity'], df_norm['animal_output_quantity'], df_norm['fish_output_quantity'])
+            
         else:
-            plt.stackplot(df["Year"], df["output"])
-    
-        plt.title(f"Output by Year ({country})")
+            plt.stackplot(df["Year"], df['crop_output_quantity'], df['animal_output_quantity'], df['fish_output_quantity'])
+        
+        plt.title(f"Output by Year in {country}.")
         plt.xlabel("Year")
         plt.ylabel("Output")
+        plt.legend(['Crop Output', 'Animal Output', 'Fish output'], loc='upper left')
+
         plt.show()
+
+
+
+## Method 5:
+############
+
+# Input: a country or a list of countries (in string format)
 
 
     def output_over_time(self, countries):
