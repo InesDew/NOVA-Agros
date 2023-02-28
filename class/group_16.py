@@ -77,7 +77,7 @@ class Agros:
         -------
         area chart of the distinct "_output_" columns for a selected country
         """
-
+        # tests country
         if country != None  and country not in self.country_list():
             raise ValueError("ValueError: Country not in dataset.")
 
