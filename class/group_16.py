@@ -353,7 +353,7 @@ class Agros:
         plt.title("Comparing the total output of countries")
         plt.show()
 
-def gapminder(self, year: int, log_scale: bool = False) -> None:
+    def gapminder(self, year: int, log_scale: bool = False) -> None:
         """
         Create a scatter plot to visualize the relationship between the usage of fertilizer,
         animal feed, and the agricultural output for a given year.
