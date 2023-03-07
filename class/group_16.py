@@ -353,7 +353,7 @@ class Agros:
         plt.title("Comparing the total output of countries")
         plt.show()
 
-    def gapminder(self, year: int) -> None:
+def gapminder(self, year: int, log_scale: bool = False) -> None:
         """
         Create a scatter plot to visualize the relationship between the usage of fertilizer,
         animal feed, and the agricultural output for a given year.
@@ -376,9 +376,7 @@ class Agros:
         The size of each data point represents the animal feed quantity used for a given year.
         The legend displays the range of animal feed quantities used, with larger circles
         indicating higher values.
-
-        The title, x-axis label, and y-axis label of the scatter plot are set to appropriate values.
-        The scatter
+        The axes of the scatterplot can be turned into a log-scale to discover certain trends.
         """
         if isinstance(year, int) is False:
             raise TypeError("The given argument 'year' is not int.")
@@ -387,11 +385,17 @@ class Agros:
         output = self.data[self.data["Year"] == year]["output_quantity"]
         area = self.data[self.data["Year"] == year]["animal_feed_quantity"]
 
-        sns.scatterplot(x=fertilizer, y=output, size=area, sizes=(1, 300))
-        plt.title(
-            "Understanding the relation of usage of fertilizer, animal feed and the output"
-        )
-        plt.xlabel("Fertilizer Quantity")
-        plt.ylabel("Output Quantity")
+        year_plot = sns.scatterplot(x=fertilizer, y=output, size=area, sizes=(1, 300))
+        plt.title("Understanding the relation of usage of fertilizer, animal feed and the output")
         plt.legend(title="Animal Feed", loc="lower right")
+
+        if log_scale:
+            year_plot.set_xscale('log')
+            year_plot.set_yscale('log')
+            plt.xlabel("Fertilizer Quantity (log)")
+            plt.ylabel("Output Quantity (log)")
+        else:
+            plt.xlabel("Fertilizer Quantity")
+            plt.ylabel("Output Quantity")           
+    
         plt.show()
