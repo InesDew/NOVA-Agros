@@ -238,20 +238,20 @@ class Agros:
         --------
         None.
         """
-        if not isinstance(country, str):
+        if not isinstance(country, (str, type(None))):
             raise TypeError("TypeError: Argument country is not string")
 
         if not isinstance(normalize, bool):
             raise TypeError("TypeError: Argument normalize is not boolean")
 
         if country not in self.country_list():
-            raise ValueError("ValueError: Country not in dataset.")
-
-        if country is None or country == "World":
-            country = "the World"
-            dataframe = self.data.groupby(["Year"], as_index=False)[[
-                "crop_output_quantity", "animal_output_quantity", "fish_output_quantity"
-            ]].apply(sum)
+            if country is None or country == "World":
+               country = "the World"
+               dataframe = self.data.groupby(["Year"], as_index=False)[[
+                   "crop_output_quantity", "animal_output_quantity", "fish_output_quantity"
+                   ]].apply(sum) 
+            else:
+                raise ValueError("ValueError: Country not in dataset.")
 
         else:
             dataframe = (
@@ -259,10 +259,7 @@ class Agros:
                 .groupby(["Year"], as_index=False)[[
                     "crop_output_quantity",
                     "animal_output_quantity",
-                    "fish_output_quantity",
-                ]]
-                .apply(sum)
-            )
+                    "fish_output_quantity",]])
 
         if normalize is True:
             dataframe_output = dataframe[
