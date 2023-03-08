@@ -158,6 +158,9 @@ class Agros:
             file.write(response.text)
 
         dataframe = pd.read_csv(file_path)
+
+        aggregated_columns = ['Asia', 'Central Asia', 'Developed Asia', 'Northeast Asia', 'South Asia', 'Southeast Asia', 'West Asia', 'Central Europe', 'Europe', 'Northern Europe', 'Southern Europe', 'Western Europe', 'Central Africa', 'East Africa', 'Horn of Africa', 'North Africa', 'Southern Africa', 'Sub-Saharan Africa', 'West Africa', 'Oceania', 'Central America', 'Latin America and the Caribbean', 'North America', 'Developed countries', 'Least developed countries', 'Sahel', 'Caribbean', 'Eastern Europe', 'Pacific']
+        dataframe = dataframe[~dataframe['Entity'].isin(aggregated_columns)]
         self.data = dataframe
 
     def country_list(self) -> list:
@@ -212,7 +215,18 @@ class Agros:
         fig, ax = plt.subplots(figsize=(11, 9))
         cmap = sns.diverging_palette(230, 20, as_cmap=True)
 
-        sns.heatmap(corr, annot=True, mask=mask, cmap=cmap)
+        ax = sns.heatmap(corr, annot=True, mask=mask, cmap=cmap)
+        ax.set(title ="Correlation matrix between quantity variables")
+        #ax.figtext(0, 0, 'Source: Agricultural total factor productivity, 2022 USDA')
+        #x = 0
+        #y = -.07
+        plt.figtext(0,-0.08, 'Source: Agricultural total factor productivity, 2022 USDA', fontsize=10, va="top", ha="left")
+
+        plt.savefig(__file__+".png", bbox_inches = "tight")
+        #ax.text(x, y, "hello this is some text at the bottom of the plot", fontsize=15, 
+        #horizontalalignment='left',verticalalignment='top', transform=ax.transAxes)
+
+        plt.show()
 
     def output_area_plot(self, country: str = None, normalize: bool = False) -> None:
         """
