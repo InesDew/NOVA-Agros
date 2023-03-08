@@ -161,31 +161,35 @@ class Agros:
             file.write(response.text)
 
         dataframe = pd.read_csv(file_path)
-        aggregated_columns = ['Asia', 'Central Asia', 'Developed Asia', 'Northeast Asia', 'South Asia', 'Southeast Asia', 'West Asia', 'Central Europe', 'Europe', 'Northern Europe', 'Southern Europe', 'Western Europe', 'Central Africa', 'East Africa', 'Horn of Africa', 'North Africa', 'Southern Africa', 'Sub-Saharan Africa', 'West Africa', 'Oceania', 'Central America', 'Latin America and the Caribbean', 'North America', 'Developed countries', 'Least developed countries', 'Sahel', 'Caribbean', 'Eastern Europe', 'Pacific']
+        aggregated_columns = ['Asia', 'Central Asia', 'Developed Asia', 'Northeast Asia', 'South Asia', 'Southeast Asia', 
+                              'West Asia', 'Central Europe', 'Europe', 'Northern Europe', 'Southern Europe', 'Western Europe', 
+                              'Central Africa', 'East Africa', 'Horn of Africa', 'North Africa', 'Southern Africa', 
+                              'Sub-Saharan Africa', 'West Africa', 'Oceania', 'Central America', 
+                              'Latin America and the Caribbean', 'North America', 'Developed countries', 
+                              'Least developed countries', 'Sahel', 'Caribbean', 'Eastern Europe', 'Pacific', 
+                              'High income', 'Low income', 'Lower-middle income', 'Upper-middle income', 'World']
         dataframe = dataframe[~dataframe['Entity'].isin(aggregated_columns)]
 
         # geographical dataset
-        geo_url = 'https://moodle.novasbe.pt/mod/resource/view.php?id=278054'
+        geo_dataframe = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+
+        # rename some Entity names in the pandas dataframe
+        self.merg_dict = {'Bosnia and Herzegovina' : 'Bosnia and Herz.', 'Central African Republic': 'Central African Rep.', 
+                          'Czechoslovakia': 'Czechia', 'Democratic Republic of Congo' : 'Dem. Rep. Congo', 
+                          'Dominican Republic' : 'Dominican Rep.', 'Equatorial Guinea' : 'Eq. Guinea', 'Eswatini' : 'eSwatini', 
+                          'Serbia and Montenegro' : 'Serbia', 'Solomon Islands' : 'Solomon Is.', 'South Sudan' : 'S. Sudan',
+                          'Timor' : 'Timor-Leste', 'United States' : 'United States of America'}
+        dataframe=dataframe.replace({"Entity": self.merg_dict})
+
+        # merge the 2 dataframes
+        merged_dataframe = geo_dataframe.merge(dataframe, how='right', left_on='name', right_on='Entity')
+
         """
-        geo_response = requests.get(geo_url)
-        print(geo_response)
-        file_path = os.path.join(full_path, "ne_50m_admin_0_countries.zip")
-        with open(file_path, "wb") as file:
-            file.write(geo_response.content)
+        No translation/equivalent for these Entities from the pandas_dataframe: Bahrain, Cape Verde, Comoros, Former Soviet Union, French Guiana, Malta
+        Mauritius, Micronesia, Polynesia, Sao Tome and Principe, Yugoslavia
         """
 
-        zip_path, _ = urllib.request.urlretrieve(geo_url)
-        with zipfile.ZipFile(zip_path, "r") as f:
-            f.extractall(full_path)
-        
-        with zipfile.ZipFile(file_path, 'r') as zip:
-            zip.extractall(full_path)
-
-        #geo_dataframe = gpd.read_file()
-        #print(type(geo_dataframe))
-        #print(geo_dataframe)
-
-        self.data = dataframe
+        self.data = merged_dataframe
 
     def country_list(self) -> list:
         """
@@ -241,8 +245,7 @@ class Agros:
 
         ax = sns.heatmap(corr, annot=True, mask=mask, cmap=cmap)
         ax.set(title ="Correlation matrix between quantity variables")
-        plt.figtext(0,-0.08, 'Source: Agricultural total factor productivity, 2022 USDA', fontsize=10, va="top", ha="left")
-        plt.savefig(__file__+".png", bbox_inches = "tight")
+        plt.figtext(0,-0.1, 'Source: Agricultural total factor productivity, 2022 USDA', fontsize=10, va="top", ha="left")
 
         plt.show()
 
@@ -433,6 +436,10 @@ class Agros:
         if isinstance(year, int) is False:
             raise TypeError("The given argument 'year' is not int.")
         
+        data_year = self.data[self.data["Year"] == year]
+        
+        data_year.plot(column = 'tfp', legend = True, figsize = [20,10], legend_kwds = {'label': "TFP by country"}) 
+        
         """
         Make a method called choropleth. 
         1. OK This method should receive a year as input, which must be an integer. 
@@ -441,8 +448,17 @@ class Agros:
         3. OK We're going deep with our analysis and we're going to use geodata. We recommend you install geopandas. 
         4. OK Alter the method where you download the data to also download and read a geographical dataset. 
 
-        5. The geo dataset must have the polygons for as many countries as possible. 
+        5. OK The geo dataset must have the polygons for as many countries as possible. 
         You can get such a datafile here (use cultural data, as it refers to countries). 
         If you download a zip file, remember you want to access the shapefile (.shp) inside. 
         Read the documentation for geopandas for examples on how to read data.
+
+        6. OK Merge (pandas equivalent to SQL JOIN) the agricultural data with the geodata on the countries. 
+        Make sure the left dataframe is the geopandas dataframe. 
+        
+        7. OK When you plot the result of the merge, you may notice some important country or countries missing. 
+        That is because their names don't match. Make a VARIABLE of the class called merge_dict which is a dictionary 
+        that renames at least one country
+
+        8. Plot the tfp variable on a world map. Make sure you use a colorbar. This example should help.
         """
