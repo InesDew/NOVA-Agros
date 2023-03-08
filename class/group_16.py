@@ -90,7 +90,9 @@ import numpy as np
 import pandas as pd
 import requests
 import seaborn as sns
-
+import geopandas as gpd
+import zipfile
+import urllib
 
 class Agros:
     """
@@ -151,6 +153,7 @@ class Agros:
         if not os.path.exists(full_path):
             os.mkdir(full_path)
 
+        # agricultural dataset
         url = "https://raw.githubusercontent.com/owid/owid-datasets/master/datasets/Agricultural%20total%20factor%20productivity%20(USDA)/Agricultural%20total%20factor%20productivity%20(USDA).csv"
         response = requests.get(url)
         file_path = os.path.join(full_path, "dataset.csv")
@@ -158,9 +161,30 @@ class Agros:
             file.write(response.text)
 
         dataframe = pd.read_csv(file_path)
-
         aggregated_columns = ['Asia', 'Central Asia', 'Developed Asia', 'Northeast Asia', 'South Asia', 'Southeast Asia', 'West Asia', 'Central Europe', 'Europe', 'Northern Europe', 'Southern Europe', 'Western Europe', 'Central Africa', 'East Africa', 'Horn of Africa', 'North Africa', 'Southern Africa', 'Sub-Saharan Africa', 'West Africa', 'Oceania', 'Central America', 'Latin America and the Caribbean', 'North America', 'Developed countries', 'Least developed countries', 'Sahel', 'Caribbean', 'Eastern Europe', 'Pacific']
         dataframe = dataframe[~dataframe['Entity'].isin(aggregated_columns)]
+
+        # geographical dataset
+        geo_url = 'https://moodle.novasbe.pt/mod/resource/view.php?id=278054'
+        """
+        geo_response = requests.get(geo_url)
+        print(geo_response)
+        file_path = os.path.join(full_path, "ne_50m_admin_0_countries.zip")
+        with open(file_path, "wb") as file:
+            file.write(geo_response.content)
+        """
+
+        zip_path, _ = urllib.request.urlretrieve(geo_url)
+        with zipfile.ZipFile(zip_path, "r") as f:
+            f.extractall(full_path)
+        
+        with zipfile.ZipFile(file_path, 'r') as zip:
+            zip.extractall(full_path)
+
+        #geo_dataframe = gpd.read_file()
+        #print(type(geo_dataframe))
+        #print(geo_dataframe)
+
         self.data = dataframe
 
     def country_list(self) -> list:
@@ -217,14 +241,8 @@ class Agros:
 
         ax = sns.heatmap(corr, annot=True, mask=mask, cmap=cmap)
         ax.set(title ="Correlation matrix between quantity variables")
-        #ax.figtext(0, 0, 'Source: Agricultural total factor productivity, 2022 USDA')
-        #x = 0
-        #y = -.07
         plt.figtext(0,-0.08, 'Source: Agricultural total factor productivity, 2022 USDA', fontsize=10, va="top", ha="left")
-
         plt.savefig(__file__+".png", bbox_inches = "tight")
-        #ax.text(x, y, "hello this is some text at the bottom of the plot", fontsize=15, 
-        #horizontalalignment='left',verticalalignment='top', transform=ax.transAxes)
 
         plt.show()
 
@@ -409,3 +427,22 @@ class Agros:
         plt.ylabel("Output Quantity")
         plt.legend(title="Animal Feed", loc="lower right")
         plt.show()
+
+    def choropleth(self, year: int) -> None:
+
+        if isinstance(year, int) is False:
+            raise TypeError("The given argument 'year' is not int.")
+        
+        """
+        Make a method called choropleth. 
+        1. OK This method should receive a year as input, which must be an integer. 
+        2. OK Raise otherwise. 
+
+        3. OK We're going deep with our analysis and we're going to use geodata. We recommend you install geopandas. 
+        4. OK Alter the method where you download the data to also download and read a geographical dataset. 
+
+        5. The geo dataset must have the polygons for as many countries as possible. 
+        You can get such a datafile here (use cultural data, as it refers to countries). 
+        If you download a zip file, remember you want to access the shapefile (.shp) inside. 
+        Read the documentation for geopandas for examples on how to read data.
+        """
