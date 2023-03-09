@@ -477,6 +477,47 @@ class Agros:
         8. Plot the tfp variable on a world map. Make sure you use a colorbar. This example should help.
         """
         
+    def predictor(self, countries: List[str]) -> None:
+        
+        if not isinstance(countries, list):
+            raise TypeError("The given argument 'countries' is not a list")
+            
+        if isinstance(countries, list):
+            # only allowing 3 countries or less
+            if len(countries) > 3:
+                raise TypeError(
+                    "The given argument 'countries' can only contain up to 3 countries. Please reduce the number of counries."
+                )
+            # checking if the counries are str
+            for element in countries:
+                if not isinstance(element, str):
+                    raise TypeError(
+                        "The given argument 'countries' is not a list of strings"
+                    )
+                # removing counries that aren't in dataset
+                if element not in self.country_list():
+                    countries.remove(element)
+            
+            # Reminding user, which countries are available, if list is empty
+            if len(countries) == 0:
+                raise TypeError(
+                    "Please choose three of the following countries: "
+                )
+                ##### !!! Issue !!!!
+                #### Printing the country list of available countries in self.country_list inside of error??
+            
+            print (countries)
+            
+
+            """
+            Make a predictor method that receives a list of countries as input, up to three. 
+            If one or more countries on the list is not present in the Agricultural dataframe, it should be ignored. 
+            If none is, raise an error message reminding the user what countries are available. 
+            Maybe you already have that from yesterday?
+            The predictor method should plot the tfp in the dataset and then complement it with an ARIMA prediction up to 2050. 
+            Use the same color for each country's actual and predicted data, but a different line style.
+            """
+        
         
         
         
