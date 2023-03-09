@@ -90,9 +90,11 @@ import numpy as np
 import pandas as pd
 import requests
 import seaborn as sns
+from statsmodels.tsa.arima.model import ARIMA
 import geopandas as gpd
 import zipfile
 import urllib
+
 
 class Agros:
     """
@@ -478,7 +480,7 @@ class Agros:
         """
         
     def predictor(self, countries: List[str]) -> None:
-        
+
         if not isinstance(countries, list):
             raise TypeError("The given argument 'countries' is not a list")
             
@@ -498,7 +500,8 @@ class Agros:
                 if element not in self.country_list():
                     countries.remove(element)
             
-            # Reminding user, which countries are available, if list is empty
+            # Reminding user, which countries are available, if list is empty from beginning on 
+            # or if all countries were removed because they weren't part of list
             if len(countries) == 0:
                 raise TypeError(
                     "Please choose three of the following countries: "
@@ -506,16 +509,37 @@ class Agros:
                 ##### !!! Issue !!!!
                 #### Printing the country list of available countries in self.country_list inside of error??
             
-            print (countries)
+            # Year and tfp columns, year as index
+            data = self.data[['Year', 'Entity', 'tfp']]
+            data.set_index('Year', inplace=True)
+            
+            fig, ax = plt.subplots(figsize=(10, 6))
+            for i, country in enumerate(countries):
+                tfp = data[data['Entity'] == country]['tfp']
+                tfp.plot(ax=ax, label=country)
+        
+            # fit ARIMA model and predict
+            for i, country in enumerate(countries):
+                tfp = data[data['Entity'] == country]['tfp']
+                model = ARIMA(tfp, order=(1,1,1))
+                model_fit = model.fit()
+                predictions = model_fit.predict(start=2019, end=2050)
+                tfp.plot(ax=ax, label='', linestyle='--')
+                predictions.plot(ax=ax, label='', linestyle='--')
+                
+            ax.set_xlabel('Year')
+            ax.set_ylabel('TFP')
+            ax.set_title('Total Factor productivity by Country with ARIMA Predictions')
+            plt.legend()
+            plt.show()
             
 
             """
-            Make a predictor method that receives a list of countries as input, up to three. 
-            If one or more countries on the list is not present in the Agricultural dataframe, it should be ignored. 
-            If none is, raise an error message reminding the user what countries are available. 
-            Maybe you already have that from yesterday?
-            The predictor method should plot the tfp in the dataset and then complement it with an ARIMA prediction up to 2050. 
-            Use the same color for each country's actual and predicted data, but a different line style.
+            1.   OK   Make a predictor method that receives a list of countries as input, up to three. 
+            2.   OK   If one or more countries on the list is not present in the Agricultural dataframe, it should be ignored. 
+            3.   WIP   If none is, raise an error message reminding the user what countries are available. 
+            4.          The predictor method should plot the tfp in the dataset and then complement it with an ARIMA prediction up to 2050. 
+            5.          Use the same color for each country's actual and predicted data, but a different line style.
             """
         
         
