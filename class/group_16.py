@@ -238,6 +238,7 @@ class Agros:
         --------
         None.
         """
+
         if not isinstance(country, (str, type(None))):
             raise TypeError("TypeError: Argument country is not string")
 
@@ -248,19 +249,21 @@ class Agros:
             if country is None or country == "World":
                country = "the World"
                dataframe = self.data.groupby(["Year"], as_index=False)[[
-                   "crop_output_quantity", "animal_output_quantity", "fish_output_quantity"
+                   "crop_output_quantity", 
+                   "animal_output_quantity", 
+                   "fish_output_quantity",
                    ]].apply(sum) 
             else:
                 raise ValueError("ValueError: Country not in dataset.")
 
         else:
-            dataframe = (
-                self.data[self.data["Entity"] == country]
-                .groupby(["Year"], as_index=False)[[
-                    "crop_output_quantity",
-                    "animal_output_quantity",
-                    "fish_output_quantity",]])
-
+            dataframe = (self.data[self.data["Entity"] == country].
+                         groupby(["Year"], as_index=False)[[
+                             "crop_output_quantity", 
+                             "animal_output_quantity",
+                             "fish_output_quantity",
+                             ]]).apply(sum)
+        
         if normalize is True:
             dataframe_output = dataframe[
                 [
@@ -269,7 +272,9 @@ class Agros:
                     "fish_output_quantity",
                 ]
             ].apply(lambda x: x / x.sum() * 100, axis=1)
+            
             dataframe_norm = pd.concat([dataframe["Year"], dataframe_output], axis=1)
+           
             plt.stackplot(
                 dataframe_norm["Year"],
                 dataframe_norm["crop_output_quantity"],
