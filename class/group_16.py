@@ -329,6 +329,8 @@ class Agros:
         plt.xlabel("Year")
         plt.ylabel("Output")
         plt.legend(["Crop Output", "Animal Output", "Fish Output"], loc="upper left")
+        plt.annotate('Source: Agricultural total factor productivity, 2022 USDA', (0,0), (-80,-20), fontsize=6, 
+             xycoords='axes fraction', textcoords='offset points', va='top')
 
         plt.show()
 
@@ -388,6 +390,9 @@ class Agros:
         plt.xlabel("Year")
         plt.ylabel("Total output")
         plt.title("Comparing the total output of countries")
+        plt.annotate('Source: Agricultural total factor productivity, 2022 USDA', (0,0), (-80,-20), fontsize=6, 
+             xycoords='axes fraction', textcoords='offset points', va='top')
+
         plt.show()
 
     def gapminder(self, year: int) -> None:
@@ -431,6 +436,9 @@ class Agros:
         plt.xlabel("Fertilizer Quantity")
         plt.ylabel("Output Quantity")
         plt.legend(title="Animal Feed", loc="lower right")
+        plt.annotate('Source: Agricultural total factor productivity, 2022 USDA', (0,0), (-80,-20), fontsize=6, 
+             xycoords='axes fraction', textcoords='offset points', va='top')
+
         plt.show()
 
     def choropleth(self, year: int) -> None:
@@ -441,6 +449,10 @@ class Agros:
         data_year = self.data[self.data["Year"] == year]
         
         data_year.plot(column = 'tfp', legend = True, figsize = [20,10], legend_kwds = {'label': "TFP by country"}) 
+        plt.annotate('Source: Agricultural total factor productivity, 2022 USDA', (0,0), (-80,-20), fontsize=6, 
+             xycoords='axes fraction', textcoords='offset points', va='top')
+        plt.title(f"TFP in Year {year} per country.")
+
         
         """
         Make a method called choropleth. 
@@ -464,3 +476,8 @@ class Agros:
 
         8. Plot the tfp variable on a world map. Make sure you use a colorbar. This example should help.
         """
+        
+        
+        
+        
+        
