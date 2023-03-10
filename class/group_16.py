@@ -449,7 +449,6 @@ class Agros:
             raise TypeError("The given argument 'year' is not int.")
         
         data_year = self.data[self.data["Year"] == year]
-        
         data_year.plot(column = 'tfp', legend = True, figsize = [20,10], legend_kwds = {'label': "TFP by country"}) 
         plt.annotate('Source: Agricultural total factor productivity, 2022 USDA', (0,0), (-80,-20), fontsize=6, 
              xycoords='axes fraction', textcoords='offset points', va='top')
@@ -508,28 +507,70 @@ class Agros:
                 )
             
             # Year and tfp columns, year as index
-            data = self.data[['Year', 'Entity', 'tfp']]
-            data.set_index('Year', inplace=True)
+    #        data = self.data[['Year', 'Entity', 'tfp']]
+    #        data.set_index('Year', inplace=True)
             
-            fig, ax = plt.subplots(figsize=(10, 6))
-            for i, country in enumerate(countries):
-                tfp = data[data['Entity'] == country]['tfp']
-                tfp.plot(ax=ax, label=country)
+    #        fig, ax = plt.subplots(figsize=(10, 6))
+    #        line_styles = ['-', '--', '-.'] #new
+    #        colors = plt.rcParams['axes.prop_cycle'].by_key()['color'][:len(countries)] #new
+    #        for i, country in enumerate(countries):
+    #            tfp = data[data['Entity'] == country]['tfp']
+    #            tfp.plot(ax=ax, label=country) # color=colors[i], linestyle=line_styles[i])
         
             # fit ARIMA model and predict
-            for i, country in enumerate(countries):
+    from pmdarima import auto_arima 
+    import warnings 
+    warnings.filterwarnings("ignore") 
+        
+    for i, country in enumerate(countries):
                 tfp = data[data['Entity'] == country]['tfp']
-                model = ARIMA(tfp, order=(1,1,1))
-                model_fit = model.fit()
-                predictions = model_fit.predict(start=2019, end=2050)
-                tfp.plot(ax=ax, label='', linestyle='--')
-                predictions.plot(ax=ax, label='', linestyle='--')
+                #model = ARIMA(tfp, order=(1,1,1))
+                #model_fit = model.fit()
                 
+                # Convert the index to a format supported by ARIMA model
+ #   tfp.index = pd.DatetimeIndex(tfp.index).to_period('M')
+                
+    model = auto_arima(data['tfp'],
+                          start_p = 1,
+                          start_q = 1, 
+                          max_p = 3,
+                          max_q = 3,
+                          m = 12, 
+                          start_P = 0,
+                          seasonal = False
+                          d = None,
+                          D = 1,
+                          trace = True, 
+                          error_action ='ignore',   # Ignore incompatible settings
+                          suppress_warnings = True,  
+                          stepwise = True)  
+    model.summary()         
+    predictions = pd.DataFrame(model.predict(n_periods = 30))
+    predictions['Year'] = pd.date_range(start='2020', periods=30, freq='AS')
+    predictions.head()
+    
+    predictions.set_index('Year', inplace=True)
+                
+           #     model_fit = model.fit()
+                
+                # Create a date range for the prediction period
+             #   pred_range = pd.period_range(2020, 2050-12, freq='M')
+                # Make predictions for the date range
+             #   predictions = model_fit.predict(start=pred_range[0], end=pred_range[-1], typ='levels')
+    
+                # Set the index of the predictions to the date range
+             #   predictions.index = pred_range
+   
+                #predictions = model_fit.predict(start='2019', end='2050')
+                tfp.plot(ax=ax, label='', color=colors[i], linestyle='--') #color=colors[i], (before linestyle)
+                predictions.plot(ax=ax, label='', color=colors[i], linestyle='--') #color=colors[i] (before linestyle)
+                
+              
             ax.set_xlabel('Year')
             ax.set_ylabel('TFP')
             ax.set_title('Total Factor productivity by Country with ARIMA Predictions')
             plt.legend()
-            plt.show()
+            plt.show() 
             
 
             """
