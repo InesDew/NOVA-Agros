@@ -491,7 +491,7 @@ class Agros:
                     "The given argument 'countries' can only contain up to 3 countries. Please reduce the number of counries."
                 )
             # checking if the counries are str
-            for element in countries:
+            for element in countries[:]:
                 if not isinstance(element, str):
                     raise TypeError(
                         "The given argument 'countries' is not a list of strings"
@@ -504,10 +504,8 @@ class Agros:
             # or if all countries were removed because they weren't part of list
             if len(countries) == 0:
                 raise TypeError(
-                    "Please choose three of the following countries: "
+                    "Please choose three of the following countries: "+ ", ".join(self.country_list())
                 )
-                ##### !!! Issue !!!!
-                #### Printing the country list of available countries in self.country_list inside of error??
             
             # Year and tfp columns, year as index
             data = self.data[['Year', 'Entity', 'tfp']]
@@ -537,7 +535,7 @@ class Agros:
             """
             1.   OK   Make a predictor method that receives a list of countries as input, up to three. 
             2.   OK   If one or more countries on the list is not present in the Agricultural dataframe, it should be ignored. 
-            3.   WIP   If none is, raise an error message reminding the user what countries are available. 
+            3.   OK   If none is, raise an error message reminding the user what countries are available. 
             4.          The predictor method should plot the tfp in the dataset and then complement it with an ARIMA prediction up to 2050. 
             5.          Use the same color for each country's actual and predicted data, but a different line style.
             """
