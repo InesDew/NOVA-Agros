@@ -530,23 +530,20 @@ class Agros:
                 # Convert the index to a format supported by ARIMA model
  #   tfp.index = pd.DatetimeIndex(tfp.index).to_period('M')
                 
-    model = auto_arima(data['tfp'],
-                          start_p = 1,
-                          start_q = 1, 
-                          max_p = 3,
-                          max_q = 3,
-                          m = 12, 
-                          start_P = 0,
-                          seasonal = False
-                          d = None,
-                          D = 1,
-                          trace = True, 
-                          error_action ='ignore',   # Ignore incompatible settings
-                          suppress_warnings = True,  
-                          stepwise = True)  
+    model = auto_arima(data['tfp'], start_p = 1, start_q = 1, max_p = 3,
+                       max_q = 3, 
+                       m = 12, 
+                       start_P = 0, 
+                       seasonal = False, 
+                       d = None, 
+                       D = 1,
+                       trace = True, 
+                       error_action ='ignore',   # Ignore incompatible settings
+                       suppress_warnings = True,  
+                       stepwise = True)  
     model.summary()         
-    predictions = pd.DataFrame(model.predict(n_periods = 30))
-    predictions['Year'] = pd.date_range(start='2020', periods=30, freq='AS')
+    predictions = pd.DataFrame(model.predict(n_periods = 31))
+    predictions['Year'] = pd.date_range(start='2020', periods=31, freq='YS')
     predictions.head()
     
     predictions.set_index('Year', inplace=True)
@@ -562,15 +559,15 @@ class Agros:
              #   predictions.index = pred_range
    
                 #predictions = model_fit.predict(start='2019', end='2050')
-                tfp.plot(ax=ax, label='', color=colors[i], linestyle='--') #color=colors[i], (before linestyle)
-                predictions.plot(ax=ax, label='', color=colors[i], linestyle='--') #color=colors[i] (before linestyle)
+    tfp.plot(ax=ax, label='', color=colors[i], linestyle='--') #color=colors[i], (before linestyle)
+    predictions.plot(ax=ax, label='', color=colors[i], linestyle='--') #color=colors[i] (before linestyle)
                 
               
-            ax.set_xlabel('Year')
-            ax.set_ylabel('TFP')
-            ax.set_title('Total Factor productivity by Country with ARIMA Predictions')
-            plt.legend()
-            plt.show() 
+    ax.set_xlabel('Year')
+    ax.set_ylabel('TFP')
+    ax.set_title('Total Factor productivity by Country with ARIMA Predictions')
+    plt.legend()
+    plt.show() 
             
 
             """
