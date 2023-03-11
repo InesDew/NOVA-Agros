@@ -90,6 +90,12 @@ import numpy as np
 import pandas as pd
 import requests
 import seaborn as sns
+from statsmodels.tsa.arima.model import ARIMA
+import geopandas as gpd
+import zipfile
+import urllib
+from pmdarima.arima import auto_arima
+import warnings
 
 
 class Agros:
@@ -151,6 +157,7 @@ class Agros:
         if not os.path.exists(full_path):
             os.mkdir(full_path)
 
+        # agricultural dataset
         url = "https://raw.githubusercontent.com/owid/owid-datasets/master/datasets/Agricultural%20total%20factor%20productivity%20(USDA)/Agricultural%20total%20factor%20productivity%20(USDA).csv"
         response = requests.get(url)
         file_path = os.path.join(full_path, "dataset.csv")
@@ -158,7 +165,35 @@ class Agros:
             file.write(response.text)
 
         dataframe = pd.read_csv(file_path)
-        self.data = dataframe
+        aggregated_columns = ['Asia', 'Central Asia', 'Developed Asia', 'Northeast Asia', 'South Asia', 'Southeast Asia', 
+                              'West Asia', 'Central Europe', 'Europe', 'Northern Europe', 'Southern Europe', 'Western Europe', 
+                              'Central Africa', 'East Africa', 'Horn of Africa', 'North Africa', 'Southern Africa', 
+                              'Sub-Saharan Africa', 'West Africa', 'Oceania', 'Central America', 
+                              'Latin America and the Caribbean', 'North America', 'Developed countries', 
+                              'Least developed countries', 'Sahel', 'Caribbean', 'Eastern Europe', 'Pacific', 
+                              'High income', 'Low income', 'Lower-middle income', 'Upper-middle income', 'World']
+        dataframe = dataframe[~dataframe['Entity'].isin(aggregated_columns)]
+
+        # geographical dataset
+        geo_dataframe = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+
+        # rename some Entity names in the pandas dataframe
+        self.merg_dict = {'Bosnia and Herzegovina' : 'Bosnia and Herz.', 'Central African Republic': 'Central African Rep.', 
+                          'Czechoslovakia': 'Czechia', 'Democratic Republic of Congo' : 'Dem. Rep. Congo', 
+                          'Dominican Republic' : 'Dominican Rep.', 'Equatorial Guinea' : 'Eq. Guinea', 'Eswatini' : 'eSwatini', 
+                          'Serbia and Montenegro' : 'Serbia', 'Solomon Islands' : 'Solomon Is.', 'South Sudan' : 'S. Sudan',
+                          'Timor' : 'Timor-Leste', 'United States' : 'United States of America'}
+        dataframe=dataframe.replace({"Entity": self.merg_dict})
+
+        # merge the 2 dataframes
+        merged_dataframe = geo_dataframe.merge(dataframe, how='right', left_on='name', right_on='Entity')
+
+        """
+        No translation/equivalent for these Entities from the pandas_dataframe: Bahrain, Cape Verde, Comoros, Former Soviet Union, French Guiana, Malta
+        Mauritius, Micronesia, Polynesia, Sao Tome and Principe, Yugoslavia
+        """
+
+        self.data = merged_dataframe
 
     def country_list(self) -> list:
         """
@@ -212,7 +247,11 @@ class Agros:
         fig, ax = plt.subplots(figsize=(11, 9))
         cmap = sns.diverging_palette(230, 20, as_cmap=True)
 
-        sns.heatmap(corr, annot=True, mask=mask, cmap=cmap)
+        ax = sns.heatmap(corr, annot=True, mask=mask, cmap=cmap)
+        ax.set(title ="Correlation matrix between quantity variables")
+        plt.figtext(0,-0.1, 'Source: Agricultural total factor productivity, 2022 USDA', fontsize=10, va="top", ha="left")
+
+        plt.show()
 
     def output_area_plot(self, country: str = None, normalize: bool = False) -> None:
         """
@@ -238,32 +277,32 @@ class Agros:
         --------
         None.
         """
-        if not isinstance(country, str):
+
+        if not isinstance(country, (str, type(None))):
             raise TypeError("TypeError: Argument country is not string")
 
         if not isinstance(normalize, bool):
             raise TypeError("TypeError: Argument normalize is not boolean")
 
         if country not in self.country_list():
-            raise ValueError("ValueError: Country not in dataset.")
-
-        if country is None or country == "World":
-            country = "the World"
-            dataframe = self.data.groupby(["Year"], as_index=False)[[
-                "crop_output_quantity", "animal_output_quantity", "fish_output_quantity"
-            ]].apply(sum)
+            if country is None or country == "World":
+               country = "the World"
+               dataframe = self.data.groupby(["Year"], as_index=False)[[
+                   "crop_output_quantity", 
+                   "animal_output_quantity", 
+                   "fish_output_quantity",
+                   ]].apply(sum) 
+            else:
+                raise ValueError("ValueError: Country not in dataset.")
 
         else:
-            dataframe = (
-                self.data[self.data["Entity"] == country]
-                .groupby(["Year"], as_index=False)[[
-                    "crop_output_quantity",
-                    "animal_output_quantity",
-                    "fish_output_quantity",
-                ]]
-                .apply(sum)
-            )
-
+            dataframe = (self.data[self.data["Entity"] == country].
+                         groupby(["Year"], as_index=False)[[
+                             "crop_output_quantity", 
+                             "animal_output_quantity",
+                             "fish_output_quantity",
+                             ]]).apply(sum)
+        
         if normalize is True:
             dataframe_output = dataframe[
                 [
@@ -272,7 +311,9 @@ class Agros:
                     "fish_output_quantity",
                 ]
             ].apply(lambda x: x / x.sum() * 100, axis=1)
+            
             dataframe_norm = pd.concat([dataframe["Year"], dataframe_output], axis=1)
+           
             plt.stackplot(
                 dataframe_norm["Year"],
                 dataframe_norm["crop_output_quantity"],
@@ -292,6 +333,8 @@ class Agros:
         plt.xlabel("Year")
         plt.ylabel("Output")
         plt.legend(["Crop Output", "Animal Output", "Fish Output"], loc="upper left")
+        plt.annotate('Source: Agricultural total factor productivity, 2022 USDA', (0,0), (-80,-20), fontsize=6, 
+             xycoords='axes fraction', textcoords='offset points', va='top')
 
         plt.show()
 
@@ -351,6 +394,9 @@ class Agros:
         plt.xlabel("Year")
         plt.ylabel("Total output")
         plt.title("Comparing the total output of countries")
+        plt.annotate('Source: Agricultural total factor productivity, 2022 USDA', (0,0), (-80,-20), fontsize=6, 
+             xycoords='axes fraction', textcoords='offset points', va='top')
+
         plt.show()
 
     def gapminder(self, year: int, log_scale: bool = False) -> None:
@@ -399,3 +445,104 @@ class Agros:
             plt.ylabel("Output Quantity")           
     
         plt.show()
+
+    def choropleth(self, year: int) -> None:
+
+        if isinstance(year, int) is False:
+            raise TypeError("The given argument 'year' is not int.")
+        
+        data_year = self.data[self.data["Year"] == year]
+        
+        data_year.plot(column = 'tfp', legend = True, figsize = [20,10], legend_kwds = {'label': "TFP by country"}) 
+        plt.annotate('Source: Agricultural total factor productivity, 2022 USDA', (0,0), (-80,-20), fontsize=6, 
+             xycoords='axes fraction', textcoords='offset points', va='top')
+        plt.title(f"TFP in Year {year} per country.")
+
+        
+        """
+        Make a method called choropleth. 
+        1. OK This method should receive a year as input, which must be an integer. 
+        2. OK Raise otherwise. 
+
+        3. OK We're going deep with our analysis and we're going to use geodata. We recommend you install geopandas. 
+        4. OK Alter the method where you download the data to also download and read a geographical dataset. 
+
+        5. OK The geo dataset must have the polygons for as many countries as possible. 
+        You can get such a datafile here (use cultural data, as it refers to countries). 
+        If you download a zip file, remember you want to access the shapefile (.shp) inside. 
+        Read the documentation for geopandas for examples on how to read data.
+
+        6. OK Merge (pandas equivalent to SQL JOIN) the agricultural data with the geodata on the countries. 
+        Make sure the left dataframe is the geopandas dataframe. 
+        
+        7. OK When you plot the result of the merge, you may notice some important country or countries missing. 
+        That is because their names don't match. Make a VARIABLE of the class called merge_dict which is a dictionary 
+        that renames at least one country
+
+        8. Plot the tfp variable on a world map. Make sure you use a colorbar. This example should help.
+        """
+        
+    def predictor(self, countries: List[str]) -> None:
+
+        if not isinstance(countries, list):
+            raise TypeError("The given argument 'countries' is not a list")
+            
+        if isinstance(countries, list):
+            # only allowing 3 countries or less
+            if len(countries) > 3:
+                raise TypeError(
+                    "The given argument 'countries' can only contain up to 3 countries. Please reduce the number of counries."
+                )
+            # checking if the counries are str
+            for element in countries[:]:
+                if not isinstance(element, str):
+                    raise TypeError(
+                        "The given argument 'countries' is not a list of strings"
+                    )
+                # removing counries that aren't in dataset
+                if element not in self.country_list():
+                    countries.remove(element)
+            
+            # Reminding user, which countries are available, if list is empty from beginning on 
+            # or if all countries were removed because they weren't part of list
+            if len(countries) == 0:
+                raise TypeError(
+                    "Please choose three of the following countries: "+ ", ".join(self.country_list())
+                )
+            
+            warnings.filterwarnings("ignore")
+            
+            # Year and tfp columns, year as index
+            data = self.data[['Year', 'Entity', 'tfp']]
+            data.set_index('Year', inplace=True)
+            
+            colors = ["red", "blue", "green"]
+            
+            fig, ax = plt.subplots(figsize=(10, 6))
+            for i, country in enumerate(countries):
+                tfp = data[data['Entity'] == country]['tfp']
+                tfp.plot(ax=ax, label=country, color=colors[i])
+            
+            # fit ARIMA model and predict
+            for i, country in enumerate(countries):
+                tfp = data[data['Entity'] == country]['tfp']
+                model = auto_arima(tfp, seasonal=False, error_action='ignore', suppress_warnings=True)
+                predictions = model.predict(n_periods=31)
+                plt.plot(range(2019, 2050), predictions, label='', linestyle='--', color=colors[i])
+
+            ax.set_xlabel('Year')
+            ax.set_ylabel('TFP')
+            ax.set_title('Total Factor productivity by Country with ARIMA Predictions')
+            plt.legend()
+            plt.show()
+            
+            
+
+            """
+            1.   OK   Make a predictor method that receives a list of countries as input, up to three. 
+            2.   OK   If one or more countries on the list is not present in the Agricultural dataframe, it should be ignored. 
+            3.   OK   If none is, raise an error message reminding the user what countries are available. 
+            4.   OK       The predictor method should plot the tfp in the dataset and then complement it with an ARIMA prediction up to 2050. 
+            5.   OK       Use the same color for each country's actual and predicted data, but a different line style.
+            """
+        
