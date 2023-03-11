@@ -527,11 +527,8 @@ class Agros:
                 tfp = data[data['Entity'] == country]['tfp']
                 model = auto_arima(tfp, seasonal=False, error_action='ignore', suppress_warnings=True)
                 predictions = model.predict(n_periods=31)
-                #tfp.plot(ax=ax, label='', linestyle='--')
                 plt.plot(range(2019, 2050), predictions, label='', linestyle='--', color=colors[i])
 
-
-            
             ax.set_xlabel('Year')
             ax.set_ylabel('TFP')
             ax.set_title('Total Factor productivity by Country with ARIMA Predictions')
@@ -544,8 +541,8 @@ class Agros:
             1.   OK   Make a predictor method that receives a list of countries as input, up to three. 
             2.   OK   If one or more countries on the list is not present in the Agricultural dataframe, it should be ignored. 
             3.   OK   If none is, raise an error message reminding the user what countries are available. 
-            4.          The predictor method should plot the tfp in the dataset and then complement it with an ARIMA prediction up to 2050. 
-            5.          Use the same color for each country's actual and predicted data, but a different line style.
+            4.   OK       The predictor method should plot the tfp in the dataset and then complement it with an ARIMA prediction up to 2050. 
+            5.   OK       Use the same color for each country's actual and predicted data, but a different line style.
             """
         
         
