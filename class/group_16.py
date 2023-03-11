@@ -459,29 +459,6 @@ class Agros:
         plt.title(f"TFP in Year {year} per country.")
 
         
-        """
-        Make a method called choropleth. 
-        1. OK This method should receive a year as input, which must be an integer. 
-        2. OK Raise otherwise. 
-
-        3. OK We're going deep with our analysis and we're going to use geodata. We recommend you install geopandas. 
-        4. OK Alter the method where you download the data to also download and read a geographical dataset. 
-
-        5. OK The geo dataset must have the polygons for as many countries as possible. 
-        You can get such a datafile here (use cultural data, as it refers to countries). 
-        If you download a zip file, remember you want to access the shapefile (.shp) inside. 
-        Read the documentation for geopandas for examples on how to read data.
-
-        6. OK Merge (pandas equivalent to SQL JOIN) the agricultural data with the geodata on the countries. 
-        Make sure the left dataframe is the geopandas dataframe. 
-        
-        7. OK When you plot the result of the merge, you may notice some important country or countries missing. 
-        That is because their names don't match. Make a VARIABLE of the class called merge_dict which is a dictionary 
-        that renames at least one country
-
-        8. Plot the tfp variable on a world map. Make sure you use a colorbar. This example should help.
-        """
-        
     def predictor(self, countries: List[str]) -> None:
 
         if not isinstance(countries, list):
@@ -535,14 +512,5 @@ class Agros:
             ax.set_title('Total Factor productivity by Country with ARIMA Predictions')
             plt.legend()
             plt.show()
-            
-            
 
-            """
-            1.   OK   Make a predictor method that receives a list of countries as input, up to three. 
-            2.   OK   If one or more countries on the list is not present in the Agricultural dataframe, it should be ignored. 
-            3.   OK   If none is, raise an error message reminding the user what countries are available. 
-            4.   OK       The predictor method should plot the tfp in the dataset and then complement it with an ARIMA prediction up to 2050. 
-            5.   OK       Use the same color for each country's actual and predicted data, but a different line style.
-            """
         
