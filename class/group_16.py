@@ -447,6 +447,21 @@ class Agros:
         plt.show()
 
     def choropleth(self, year: int) -> None:
+        """
+        Create a choropleth map of total factor productivity (TFP) by country for the given year.
+    
+        Parameters:
+        ----------
+        year (int): The year to create the choropleth map for.
+    
+        Raises:
+        -------
+        TypeError: If the given argument 'year' is not an integer.
+    
+        Returns:
+        --------
+        None
+        """
 
         if isinstance(year, int) is False:
             raise TypeError("The given argument 'year' is not int.")
@@ -460,6 +475,25 @@ class Agros:
 
         
     def predictor(self, countries: List[str]) -> None:
+        """
+        Plots the tfp column of the dataset for the list of 3 countries that was given as an argument 
+        and complements it with an AutoArima prediction up to 2050.
+        
+        Args:
+        - self: An instance of the Agro class.
+        - countries (List[str]): A list of 1-3 country names (str) to plot the tfp for.
+        
+        Returns:
+        - None
+        
+        Raises:
+        - TypeError: If the given argument 'countries' is not a list.
+        - TypeError: If the given argument 'countries' can only contain up to 3 countries. 
+        - TypeError: If the given argument 'countries' is not a list of strings.
+        - TypeError: If the given country is not in the dataset.
+        - TypeError: If the list of countries is empty.
+        
+        """
 
         if not isinstance(countries, list):
             raise TypeError("The given argument 'countries' is not a list")
@@ -493,7 +527,7 @@ class Agros:
             data = self.data[['Year', 'Entity', 'tfp']]
             data.set_index('Year', inplace=True)
             
-            colors = ["red", "blue", "green"]
+            colors = ["#ff7f0e", "#1f77b4", "#2ca02c"]
             
             fig, ax = plt.subplots(figsize=(10, 6))
             for i, country in enumerate(countries):
