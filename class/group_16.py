@@ -95,6 +95,7 @@ import geopandas as gpd
 import zipfile
 import urllib
 from pmdarima.arima import auto_arima
+import warnings
 
 
 class Agros:
@@ -508,25 +509,26 @@ class Agros:
                     "Please choose three of the following countries: "+ ", ".join(self.country_list())
                 )
             
+            warnings.filterwarnings("ignore")
+            
             # Year and tfp columns, year as index
             data = self.data[['Year', 'Entity', 'tfp']]
             data.set_index('Year', inplace=True)
             
+            colors = ["red", "blue", "green"]
             
             fig, ax = plt.subplots(figsize=(10, 6))
             for i, country in enumerate(countries):
                 tfp = data[data['Entity'] == country]['tfp']
-                tfp.plot(ax=ax, label=country)
-            
-            #forecast_years = np.arange(2019, 2050)
+                tfp.plot(ax=ax, label=country, color=colors[i])
             
             # fit ARIMA model and predict
             for i, country in enumerate(countries):
                 tfp = data[data['Entity'] == country]['tfp']
                 model = auto_arima(tfp, seasonal=False, error_action='ignore', suppress_warnings=True)
                 predictions = model.predict(n_periods=31)
-                tfp.plot(ax=ax, label='', linestyle='--')
-                plt.plot(range(2019, 2050), predictions, label='', linestyle='--')
+                #tfp.plot(ax=ax, label='', linestyle='--')
+                plt.plot(range(2019, 2050), predictions, label='', linestyle='--', color=colors[i])
 
 
             
