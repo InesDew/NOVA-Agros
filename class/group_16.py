@@ -94,6 +94,7 @@ from statsmodels.tsa.arima.model import ARIMA
 import geopandas as gpd
 import zipfile
 import urllib
+from pmdarima.arima import auto_arima
 
 
 class Agros:
@@ -511,25 +512,30 @@ class Agros:
             data = self.data[['Year', 'Entity', 'tfp']]
             data.set_index('Year', inplace=True)
             
+            
             fig, ax = plt.subplots(figsize=(10, 6))
             for i, country in enumerate(countries):
                 tfp = data[data['Entity'] == country]['tfp']
                 tfp.plot(ax=ax, label=country)
-        
+            
+            #forecast_years = np.arange(2019, 2050)
+            
             # fit ARIMA model and predict
             for i, country in enumerate(countries):
                 tfp = data[data['Entity'] == country]['tfp']
-                model = ARIMA(tfp, order=(1,1,1))
-                model_fit = model.fit()
-                predictions = model_fit.predict(start=2019, end=2050)
+                model = auto_arima(tfp, seasonal=False, error_action='ignore', suppress_warnings=True)
+                predictions = model.predict(n_periods=31)
                 tfp.plot(ax=ax, label='', linestyle='--')
-                predictions.plot(ax=ax, label='', linestyle='--')
-                
+                plt.plot(range(2019, 2050), predictions, label='', linestyle='--')
+
+
+            
             ax.set_xlabel('Year')
             ax.set_ylabel('TFP')
             ax.set_title('Total Factor productivity by Country with ARIMA Predictions')
             plt.legend()
             plt.show()
+            
             
 
             """
