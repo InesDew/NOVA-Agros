@@ -1,5 +1,5 @@
 # Group 16
-Team Members
+__Team Members__
 
 53676 Celina Kollwitz  
 55577 Helena Krumm  
@@ -42,11 +42,12 @@ We wrap up the first day with a very short overall analysis between quantities a
 
 
 # Feedback Day 1
+After handing in our work of Day 1, we received feedback where the following things still weren't correct:
+- Gapminder should be in log-log scale or have an option for that. A log-log scale allows a better analysis over the magnitudes of the data.
+- Given that all "_quantity" variables of the correlation plot are highly correlated (>0.5) you should note and discuss the ones with a relatively lower correlation like "fish_output_quantity" and "pasture_quantity", which are the ones that stand out.
+- While the area plot allows for "World", it doesn't allow None.
 
-
-TBD
-
-After implementing the feedback from Day 1, we also changed a few things that were stated as an extended scope of the Day 1 tasks. 
+After implementing the feedback from Day 1 and adjusting the methods, we also changed a few things that were stated as an extended scope of the Day 1 tasks. 
 
 - [ ] First, we removed aggregated columns from our data, as we didn't notice that on day one and it makes no sense to use an Asian country and then also use *Asia* in our plots, for example. 
 - [ ] We also added a descriptive title, correct labels, and an annotation stating the source of the data.
@@ -69,9 +70,6 @@ Finally, we cleaned up our project:
 
 
 WIP
-
-
-
 # Finishing up:
 Let's begin by telling a story.
 
