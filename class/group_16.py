@@ -12,6 +12,12 @@ Dependencies:
     - numpy
     - seaborn
     - typing
+    - statsmodels.tsa.arima.model
+    - geopandas
+    - zipfile
+    - urllib
+    - pmdarima.arima
+    - warnings
 
 Classes:
 --------
@@ -37,13 +43,25 @@ Methods:
         Creates a stacked area plot of crop, animal, and fish output for a given
         country or the world over time. If the normalize parameter is set to True,
         the plot will show the proportion of each output type instead of the raw output values.
+        Raises a TypeError if the country parameter is not a string or if the normalize parameter is not a boolean.
+        Raises a ValueError if the country parameter is not in the dataset.
 
     output_over_time(countries: Union[str, List[str]]) -> None:
         Displays a line plot of the total output over time for one or more countries.
+        Raises a TypeError if the argument countries is not a list or a string, or if the elements in the list are not strings.
+        Raises a ValueError if any of the country names in the argument countries is not present in the dataset.
 
-    def gapminder(self, year: int) -> None:
-        Create a scatter plot to visualize the relationship between the usage of fertilizer,
-        animal feed, and the agricultural output for a given year.
+    gapminder(year: int, log_scale: bool = False) -> None:
+        Plots a scatter plot to visualize the relationship between the usage of fertilizer, animal feed, 
+        and the agricultural output for a given year. The size of the points represents the animal feed quantity. 
+        Raises a TypeError if the year argument is not an integer.
+
+    choropleth(year: int) -> None:
+        Creates a choropleth map of total factor productivity (TFP) by country for the given year.
+
+    predictor(countries: List[str]) -> None:
+        Plots the TFP column of the dataset for a given list of countries and predicts the TFP values 
+        for the next 30 years using the ARIMA model.        
 
 Raises:
 -------
@@ -81,6 +99,13 @@ Examples:
     # Display a scatter plot to visualize the relationship between the usage of fertilizer,
     animal feed, and the agricultural output for 1990.
     agros.gapminder(1990)
+
+    # Create a choropleth map of total factor productivity (TFP) by country for 1995.
+    agros.choropleth(1995)
+
+    # Plot the TFP column of the dataset and predict the TFP values for the next 
+    30 years using the ARIMA model.
+    agors.predictor('Germany', 'Belgium')
 """
 
 import os
@@ -124,10 +149,17 @@ class Agros:
     instead of the raw output values.
     output_over_time(countries: Union[str, List[str]]): Displays a line plot of the total output
     over time for one or more countries.
+    gapminder(self, year: int, log_scale: bool = False) -> None: Plots a scatterplot of fertilizer 
+    usage and output quantity, with the size of the points representing animal feed quantity, 
+    for a given year in the dataset.
+    choropleth(self, year: int) -> None: Creates a choropleth map of total factor productivity 
+    (TFP) by country for the given year.
+    predictor(self, countries: List[str]) -> None: Plots the tfp column of the dataset for the 
+    list of 3 countries that was given as an argument and complements it with an AutoArima prediction up to 2050.
 
     Raises:
     -------
-    TypeError: if the country parameter is not a string or if the normalize parameter is
+    TypeError: if the country parameter is not a string, the year is not an integer or if the normalize parameter is
     not a boolean.
     ValueError: if the country parameter is not in the dataset.
     """
@@ -137,18 +169,30 @@ class Agros:
 
     def data_setup(self) -> None:
         """
-        Downloads the agricultural productivity dataset from the OWID repository and stores it
-        in a local directory called 'downloads'. If the directory doesn't exist, it creates one.
-        Then, it loads the dataset into a pandas DataFrame and assigns it to the 'data' attribute
-        of the object.
-
-        Raises:
-        -------
-        None.
+        Set up the data for further analysis. This method creates a downloads folder, downloads a dataset from an external URL,
+        cleans it, merges it with a geographical dataset, and stores the resulting merged dataset as a Pandas DataFrame in the 
+        `data` attribute of the class instance.
 
         Returns:
         --------
-        None.
+        None
+
+        Raises:
+        -------
+        None
+
+        Arguments:
+        ----------
+        - self: An instance of the class.
+
+        Usage:
+        ------
+        - Call the method on an instance of the class it is defined in.
+
+        Example:
+        --------
+        my_instance = MyClass()
+        my_instance.data_setup()
         """
         absolute_path = os.path.dirname(__file__)
         relative_path = "/downloads"
@@ -187,11 +231,6 @@ class Agros:
 
         # merge the 2 dataframes
         merged_dataframe = geo_dataframe.merge(dataframe, how='right', left_on='name', right_on='Entity')
-
-        """
-        No translation/equivalent for these Entities from the pandas_dataframe: Bahrain, Cape Verde, Comoros, Former Soviet Union, French Guiana, Malta
-        Mauritius, Micronesia, Polynesia, Sao Tome and Principe, Yugoslavia
-        """
 
         self.data = merged_dataframe
 
@@ -401,28 +440,21 @@ class Agros:
 
     def gapminder(self, year: int, log_scale: bool = False) -> None:
         """
-        Create a scatter plot to visualize the relationship between the usage of fertilizer,
-        animal feed, and the agricultural output for a given year.
-
-        Args:
-        -----
-        year (int): the year for which to create the scatter plot.
-
+        Plots a scatterplot of fertilizer usage and output quantity, with the size of the points representing animal feed quantity,
+        for a given year in the dataset. The scatterplot can be plotted on a log scale if desired.
+        
+        Parameters:
+        -----------
+            year (int): The year to plot the data for.
+            log_scale (bool): Whether to plot the scatterplot on a log scale. Defaults to False.
+            
         Raises:
         -------
-        TypeError: if year is not an integer.
-
+            TypeError: If the 'year' argument is not an integer.
+        
         Returns:
         --------
-        None.
-
-        The scatter plot will have the following:
-        The x-axis represents the fertilizer quantity used for a given year.
-        The y-axis represents the output quantity for a given year.
-        The size of each data point represents the animal feed quantity used for a given year.
-        The legend displays the range of animal feed quantities used, with larger circles
-        indicating higher values.
-        The axes of the scatterplot can be turned into a log-scale to discover certain trends.
+            None
         """
         if isinstance(year, int) is False:
             raise TypeError("The given argument 'year' is not int.")
@@ -480,13 +512,16 @@ class Agros:
         and complements it with an AutoArima prediction up to 2050.
         
         Args:
+        -----
         - self: An instance of the Agro class.
         - countries (List[str]): A list of 1-3 country names (str) to plot the tfp for.
         
         Returns:
+        --------
         - None
         
         Raises:
+        -------
         - TypeError: If the given argument 'countries' is not a list.
         - TypeError: If the given argument 'countries' can only contain up to 3 countries. 
         - TypeError: If the given argument 'countries' is not a list of strings.
