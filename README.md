@@ -1,4 +1,5 @@
 # Group 16
+___
 Team Members
 
 53676 Celina Kollwitz  
@@ -6,22 +7,23 @@ Team Members
 55913 Ronja Suhling  
 55944 Ines Dewever  
 
-___
+
 # Welcome to project Agros
+___
 Hello! We are four students from Nova SBE and we participated in a two day hackathon promoted to study the agricultural output of several countries. We want to contribute to the green transition by having a more savvy taskforce, so we decided to create a python class for the challenge. The following file will guide you through the different methods of our analysis.
 
 
 
 
-___
-## Sources
 
+## Sources
+___
 For this project, we used the data from [Our World in Data](https://ourworldindata.org/). The dataset can be found [here](https://github.com/owid/owid-datasets/blob/master/datasets/Agricultural%20total%20factor%20productivity%20(USDA)/Agricultural%20total%20factor%20productivity%20(USDA).csv).
 The data can be ckecked in detail [here](https://github.com/owid/owid-datasets/tree/master/datasets/Agricultural%20total%20factor%20productivity%20(USDA)).
 
-___
-### Day 1
 
+### Day 1
+___
 After creating a  "Group_16", we initialized the repository with a README.md file, a proper license, and a .gitignore for python. Ines, who created the repository gave the __Maintainer__ permissions to all of us. And we cloned the repository to our own laptops. 
 
 
@@ -42,20 +44,21 @@ After we created the group_16.py file, we created a showcase notebook "Showcase_
 
 We wrap up the first day with a very short overall analysis between quantities and outputs.
 
-___
+
 ### Feedback Day 1
+___
 
 
-
-
+TBD
 
 After implementing the feedback from Day 1, we also changed a few things that were stated as an extended scope of the Day 1 tasks. 
 
 - [ ] First, we removed aggregated columns from our data, as we didn't notice that on day one and it makes no sense to use an Asian country and then also use *Asia* in our plots, for example. 
 - [ ] We also added a descriptive title, correct labels, and an annotation stating the source of the data.
 
-___
+
 ### Day 2
+___
 - [ ] As we now will be using geodata, we altered the download data method so that it also downloads and reads a geographical dataset. The geo dataset has the polygons for as many countries as possible and we downloaded it [here](https://www.naturalearthdata.com). We then merged the agricultural data with the geodata on the countries and made a **VARIABLE** of the class called *merge_dict* which is a dictionary that renames at least one country
 - [ ] We created another method called **choropleth** which receives a year as input and raises and Error if year is not an integer. The method plots the **tfp** variable on a world map and uses a colorbar.
 - [ ] We also made a **predictor** method that receives a list of countries (max 3) as input, plots the **tfp** in the dataset and then complement it with an **ARIMA** prediction up to 2050 where the same color for each country's actual and predicted data, but a different line style is used. If one or more countries on the list is not present in the Agricultural dataframe, it is ignored. If none is, an error message is raised, that reminds the user what countries are available. 
@@ -65,18 +68,19 @@ Finally, we cleaned up our project:
 - We used Sphinx to generate a __docs__ directory that showcases the documentation of our code. 
 - We updated the README.md to tell the user how to start using our project.
 
-___
-### Compliance
 
+### Compliance
+___
 - The whole project is __PEP8 compliant. 
 - Also, The whole project is compliant with __Static Type Checking__.
 
 
 ### WIP
 
-___
-### Finishing up:
 
+
+### Finishing up:
+___
 Let's begin by telling a story.
 
 Start by an overall analysis with the gapminder plot for the most recent year and the year 1980. What can you see as the major changes regarding the variables you considered the most relevant on day 1?
