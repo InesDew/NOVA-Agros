@@ -34,8 +34,6 @@ Software tools on which our code finds grounding and are essential for it to run
 - typing
 - statsmodels.tsa.arima.model
 - geopandas
-- zipfile
-- urllib
 - pmdarima.arima
 - warnings
 
