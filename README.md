@@ -23,6 +23,10 @@ TBD
 - The whole project is __PEP8 compliant__. 
 - Also, The whole project is compliant with __Static Type Checking__.
 
+# Specification of Requirements
+- Pandas, ... !!!
+
+
 # Day 1
 After creating a  "Group_16" repository, we initialized the repository with a README.md file, a proper license, and a .gitignore for python. Ines, who created the repository gave the __Maintainer__ permissions to all of us. And we cloned the repository to our own laptops. 
 
