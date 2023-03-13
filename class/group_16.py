@@ -12,6 +12,9 @@ Dependencies:
     - numpy
     - seaborn
     - typing
+    - statsmodels.tsa.arima.model
+    - geopandas
+    - warnings
 
 Classes:
 --------
@@ -37,13 +40,28 @@ Methods:
         Creates a stacked area plot of crop, animal, and fish output for a given
         country or the world over time. If the normalize parameter is set to True,
         the plot will show the proportion of each output type instead of the raw output values.
+        Raises a TypeError if the country parameter is not a string or if the normalize parameter
+        is not a boolean. Raises a ValueError if the country parameter is not in the dataset.
 
     output_over_time(countries: Union[str, List[str]]) -> None:
         Displays a line plot of the total output over time for one or more countries.
+        Raises a TypeError if the argument countries is not a list or a string, or if the elements
+        in the list are not strings.
+        Raises a ValueError if any of the country names in the argument countries is not present
+        in the dataset.
 
-    def gapminder(self, year: int) -> None:
-        Create a scatter plot to visualize the relationship between the usage of fertilizer,
-        animal feed, and the agricultural output for a given year.
+    gapminder(year: int, log_scale: bool = False) -> None:
+        Plots a scatter plot to visualize the relationship between the usage of fertilizer, animal
+        feed, and the agricultural output for a given year. The size of the points represents the
+        animal feed quantity.
+        Raises a TypeError if the year argument is not an integer.
+
+    choropleth(year: int) -> None:
+        Creates a choropleth map of total factor productivity (TFP) by country for the given year.
+
+    predictor(countries: List[str]) -> None:
+        Plots the TFP column of the dataset for a given list of countries and predicts the TFP
+        values for the next 30 years using the ARIMA model.
 
 Raises:
 -------
@@ -81,18 +99,26 @@ Examples:
     # Display a scatter plot to visualize the relationship between the usage of fertilizer,
     animal feed, and the agricultural output for 1990.
     agros.gapminder(1990)
+
+    # Create a choropleth map of total factor productivity (TFP) by country for 1995.
+    agros.choropleth(1995)
+
+    # Plot the TFP column of the dataset and predict the TFP values for the next
+    30 years using the ARIMA model.
+    agors.predictor('Germany', 'Belgium')
 """
 
 import os
 from typing import List, Union
+import warnings
 from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
 import requests
 import seaborn as sns
 import geopandas as gpd
-import zipfile
-import urllib
+from pmdarima.arima import auto_arima
+
 
 class Agros:
     """
@@ -120,31 +146,53 @@ class Agros:
     instead of the raw output values.
     output_over_time(countries: Union[str, List[str]]): Displays a line plot of the total output
     over time for one or more countries.
+    gapminder(self, year: int, log_scale: bool = False) -> None: Plots a scatterplot of fertilizer
+    usage and output quantity, with the size of the points representing animal feed quantity,
+    for a given year in the dataset.
+    choropleth(self, year: int) -> None: Creates a choropleth map of total factor productivity
+    (TFP) by country for the given year.
+    predictor(self, countries: List[str]) -> None: Plots the tfp column of the dataset for the
+    list of 3 countries that was given as an argument and complements it with an AutoArima
+    prediction up to 2050.
 
     Raises:
     -------
-    TypeError: if the country parameter is not a string or if the normalize parameter is
-    not a boolean.
+    TypeError: if the country parameter is not a string, the year is not an integer or if the
+    normalize parameter is not a boolean.
     ValueError: if the country parameter is not in the dataset.
     """
 
     def __init__(self):
         self.data = None
+        self.merg_dict = None
 
     def data_setup(self) -> None:
         """
-        Downloads the agricultural productivity dataset from the OWID repository and stores it
-        in a local directory called 'downloads'. If the directory doesn't exist, it creates one.
-        Then, it loads the dataset into a pandas DataFrame and assigns it to the 'data' attribute
-        of the object.
-
-        Raises:
-        -------
-        None.
+        Set up the data for further analysis. This method creates a downloads folder, downloads
+        a dataset from an external URL, cleans it, merges it with a geographical dataset, and
+        stores the resulting merged dataset as a Pandas DataFrame in the `data` attribute of the
+        class instance.
 
         Returns:
         --------
-        None.
+        None
+
+        Raises:
+        -------
+        None
+
+        Arguments:
+        ----------
+        - self: An instance of the class.
+
+        Usage:
+        ------
+        - Call the method on an instance of the class it is defined in.
+
+        Example:
+        --------
+        my_instance = MyClass()
+        my_instance.data_setup()
         """
         absolute_path = os.path.dirname(__file__)
         relative_path = "/downloads"
@@ -161,33 +209,38 @@ class Agros:
             file.write(response.text)
 
         dataframe = pd.read_csv(file_path)
-        aggregated_columns = ['Asia', 'Central Asia', 'Developed Asia', 'Northeast Asia', 'South Asia', 'Southeast Asia', 
-                              'West Asia', 'Central Europe', 'Europe', 'Northern Europe', 'Southern Europe', 'Western Europe', 
-                              'Central Africa', 'East Africa', 'Horn of Africa', 'North Africa', 'Southern Africa', 
-                              'Sub-Saharan Africa', 'West Africa', 'Oceania', 'Central America', 
-                              'Latin America and the Caribbean', 'North America', 'Developed countries', 
-                              'Least developed countries', 'Sahel', 'Caribbean', 'Eastern Europe', 'Pacific', 
-                              'High income', 'Low income', 'Lower-middle income', 'Upper-middle income', 'World']
+        aggregated_columns = ['Asia', 'Central Asia', 'Developed Asia', 'Northeast Asia',
+                              'South Asia', 'Southeast Asia', 'West Asia', 'Central Europe',
+                              'Europe', 'Northern Europe', 'Southern Europe', 'Western Europe',
+                              'Central Africa', 'East Africa', 'Horn of Africa', 'North Africa',
+                              'Southern Africa', 'Sub-Saharan Africa', 'West Africa', 'Oceania',
+                              'Central America', 'Latin America and the Caribbean',
+                              'North America', 'Developed countries', 'Least developed countries',
+                              'Sahel', 'Caribbean', 'Eastern Europe', 'Pacific', 'High income',
+                              'Low income', 'Lower-middle income', 'Upper-middle income', 'World']
         dataframe = dataframe[~dataframe['Entity'].isin(aggregated_columns)]
 
         # geographical dataset
         geo_dataframe = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
 
         # rename some Entity names in the pandas dataframe
-        self.merg_dict = {'Bosnia and Herzegovina' : 'Bosnia and Herz.', 'Central African Republic': 'Central African Rep.', 
-                          'Czechoslovakia': 'Czechia', 'Democratic Republic of Congo' : 'Dem. Rep. Congo', 
-                          'Dominican Republic' : 'Dominican Rep.', 'Equatorial Guinea' : 'Eq. Guinea', 'Eswatini' : 'eSwatini', 
-                          'Serbia and Montenegro' : 'Serbia', 'Solomon Islands' : 'Solomon Is.', 'South Sudan' : 'S. Sudan',
-                          'Timor' : 'Timor-Leste', 'United States' : 'United States of America'}
+        self.merg_dict = {'Bosnia and Herzegovina' : 'Bosnia and Herz.',
+                          'Central African Republic': 'Central African Rep.',
+                          'Czechoslovakia': 'Czechia',
+                          'Democratic Republic of Congo' : 'Dem. Rep. Congo',
+                          'Dominican Republic' : 'Dominican Rep.',
+                          'Equatorial Guinea' : 'Eq. Guinea',
+                          'Eswatini' : 'eSwatini',
+                          'Serbia and Montenegro' : 'Serbia',
+                          'Solomon Islands' : 'Solomon Is.',
+                          'South Sudan' : 'S. Sudan',
+                          'Timor' : 'Timor-Leste',
+                          'United States' : 'United States of America'}
         dataframe=dataframe.replace({"Entity": self.merg_dict})
 
         # merge the 2 dataframes
-        merged_dataframe = geo_dataframe.merge(dataframe, how='right', left_on='name', right_on='Entity')
-
-        """
-        No translation/equivalent for these Entities from the pandas_dataframe: Bahrain, Cape Verde, Comoros, Former Soviet Union, French Guiana, Malta
-        Mauritius, Micronesia, Polynesia, Sao Tome and Principe, Yugoslavia
-        """
+        merged_dataframe = geo_dataframe.merge(dataframe, how='right', left_on='name',
+                                               right_on='Entity')
 
         self.data = merged_dataframe
 
@@ -240,12 +293,13 @@ class Agros:
         ].corr()
 
         mask = np.triu(np.ones_like(corr, dtype=bool))
-        fig, ax = plt.subplots(figsize=(11, 9))
+        fig, axis = plt.subplots(figsize=(11, 9))
         cmap = sns.diverging_palette(230, 20, as_cmap=True)
 
-        ax = sns.heatmap(corr, annot=True, mask=mask, cmap=cmap)
-        ax.set(title ="Correlation matrix between quantity variables")
-        plt.figtext(0,-0.1, 'Source: Agricultural total factor productivity, 2022 USDA', fontsize=10, va="top", ha="left")
+        axis = sns.heatmap(corr, annot=True, mask=mask, cmap=cmap)
+        axis.set(title ="Correlation matrix between quantity variables")
+        plt.figtext(0,-0.1, 'Source: Agricultural total factor productivity, 2022 USDA',
+                    fontsize=10, va="top", ha="left")
 
         plt.show()
 
@@ -282,23 +336,23 @@ class Agros:
 
         if country not in self.country_list():
             if country is None or country == "World":
-               country = "the World"
-               dataframe = self.data.groupby(["Year"], as_index=False)[[
-                   "crop_output_quantity", 
-                   "animal_output_quantity", 
+                country = "the World"
+                dataframe = self.data.groupby(["Year"], as_index=False)[[
+                   "crop_output_quantity",
+                   "animal_output_quantity",
                    "fish_output_quantity",
-                   ]].apply(sum) 
+                   ]].apply(sum)
             else:
                 raise ValueError("ValueError: Country not in dataset.")
 
         else:
             dataframe = (self.data[self.data["Entity"] == country].
                          groupby(["Year"], as_index=False)[[
-                             "crop_output_quantity", 
+                             "crop_output_quantity",
                              "animal_output_quantity",
                              "fish_output_quantity",
                              ]]).apply(sum)
-        
+
         if normalize is True:
             dataframe_output = dataframe[
                 [
@@ -307,9 +361,9 @@ class Agros:
                     "fish_output_quantity",
                 ]
             ].apply(lambda x: x / x.sum() * 100, axis=1)
-            
+
             dataframe_norm = pd.concat([dataframe["Year"], dataframe_output], axis=1)
-           
+
             plt.stackplot(
                 dataframe_norm["Year"],
                 dataframe_norm["crop_output_quantity"],
@@ -329,6 +383,9 @@ class Agros:
         plt.xlabel("Year")
         plt.ylabel("Output")
         plt.legend(["Crop Output", "Animal Output", "Fish Output"], loc="upper left")
+        plt.annotate('Source: Agricultural total factor productivity, 2022 USDA', (0,0),
+                     (-80,-20), fontsize=6, xycoords='axes fraction',
+                     textcoords='offset points', va='top')
 
         plt.show()
 
@@ -388,34 +445,30 @@ class Agros:
         plt.xlabel("Year")
         plt.ylabel("Total output")
         plt.title("Comparing the total output of countries")
+        plt.annotate('Source: Agricultural total factor productivity, 2022 USDA', (0,0),
+                     (-80,-20), fontsize=6, xycoords='axes fraction',
+                     textcoords='offset points', va='top')
+
         plt.show()
 
-    def gapminder(self, year: int) -> None:
+    def gapminder(self, year: int, log_scale: bool = False) -> None:
         """
-        Create a scatter plot to visualize the relationship between the usage of fertilizer,
-        animal feed, and the agricultural output for a given year.
+        Plots a scatterplot of fertilizer usage and output quantity, with the size of the
+        points representing animal feed quantity, for a given year in the dataset. The
+        scatterplot can be plotted on a log scale if desired.
 
-        Args:
-        -----
-        year (int): the year for which to create the scatter plot.
+        Parameters:
+        -----------
+            year (int): The year to plot the data for.
+            log_scale (bool): Whether to plot the scatterplot on a log scale. Defaults to False.
 
         Raises:
         -------
-        TypeError: if year is not an integer.
+            TypeError: If the 'year' argument is not an integer.
 
         Returns:
         --------
-        None.
-
-        The scatter plot will have the following:
-        The x-axis represents the fertilizer quantity used for a given year.
-        The y-axis represents the output quantity for a given year.
-        The size of each data point represents the animal feed quantity used for a given year.
-        The legend displays the range of animal feed quantities used, with larger circles
-        indicating higher values.
-
-        The title, x-axis label, and y-axis label of the scatter plot are set to appropriate values.
-        The scatter
+            None
         """
         if isinstance(year, int) is False:
             raise TypeError("The given argument 'year' is not int.")
@@ -424,43 +477,124 @@ class Agros:
         output = self.data[self.data["Year"] == year]["output_quantity"]
         area = self.data[self.data["Year"] == year]["animal_feed_quantity"]
 
-        sns.scatterplot(x=fertilizer, y=output, size=area, sizes=(1, 300))
-        plt.title(
-            "Understanding the relation of usage of fertilizer, animal feed and the output"
-        )
-        plt.xlabel("Fertilizer Quantity")
-        plt.ylabel("Output Quantity")
+        year_plot = sns.scatterplot(x=fertilizer, y=output, size=area, sizes=(1, 300))
+        plt.title("Understanding the relation of usage of fertilizer, animal feed and "
+                    f"the output ({year})")
         plt.legend(title="Animal Feed", loc="lower right")
+
+        if log_scale:
+            year_plot.set_xscale('log')
+            year_plot.set_yscale('log')
+            plt.xlabel("Fertilizer Quantity (log)")
+            plt.ylabel("Output Quantity (log)")
+        else:
+            plt.xlabel("Fertilizer Quantity")
+            plt.ylabel("Output Quantity")
+
         plt.show()
 
     def choropleth(self, year: int) -> None:
+        """
+        Create a choropleth map of total factor productivity (TFP) by country for the given year.
 
+        Parameters:
+        ----------
+        year (int): The year to create the choropleth map for.
+
+        Raises:
+        -------
+        TypeError: If the given argument 'year' is not an integer.
+
+        Returns:
+        --------
+        None
+        """
         if isinstance(year, int) is False:
             raise TypeError("The given argument 'year' is not int.")
-        
+
         data_year = self.data[self.data["Year"] == year]
-        
-        data_year.plot(column = 'tfp', legend = True, figsize = [20,10], legend_kwds = {'label': "TFP by country"}) 
-        
+
+        data_year.plot(column = 'tfp', legend = True, figsize = [20,10],
+                       legend_kwds = {'label': "TFP by country"})
+        plt.annotate('Source: Agricultural total factor productivity, 2022 USDA', (0,0),
+                     (-80,-20), fontsize=6, xycoords='axes fraction',
+                     textcoords='offset points', va='top')
+        plt.title(f"TFP in Year {year} per country.")
+
+
+    def predictor(self, countries: List[str]) -> None:
         """
-        Make a method called choropleth. 
-        1. OK This method should receive a year as input, which must be an integer. 
-        2. OK Raise otherwise. 
+        Plots the tfp column of the dataset for the list of 3 countries that was given as
+        an argument and complements it with an AutoArima prediction up to 2050.
 
-        3. OK We're going deep with our analysis and we're going to use geodata. We recommend you install geopandas. 
-        4. OK Alter the method where you download the data to also download and read a geographical dataset. 
+        Args:
+        -----
+        - self: An instance of the Agro class.
+        - countries (List[str]): A list of 1-3 country names (str) to plot the tfp for.
 
-        5. OK The geo dataset must have the polygons for as many countries as possible. 
-        You can get such a datafile here (use cultural data, as it refers to countries). 
-        If you download a zip file, remember you want to access the shapefile (.shp) inside. 
-        Read the documentation for geopandas for examples on how to read data.
+        Returns:
+        --------
+        - None
 
-        6. OK Merge (pandas equivalent to SQL JOIN) the agricultural data with the geodata on the countries. 
-        Make sure the left dataframe is the geopandas dataframe. 
-        
-        7. OK When you plot the result of the merge, you may notice some important country or countries missing. 
-        That is because their names don't match. Make a VARIABLE of the class called merge_dict which is a dictionary 
-        that renames at least one country
-
-        8. Plot the tfp variable on a world map. Make sure you use a colorbar. This example should help.
+        Raises:
+        -------
+        - TypeError: If the given argument 'countries' is not a list.
+        - TypeError: If the given argument 'countries' can only contain up to 3 countries.
+        - TypeError: If the given argument 'countries' is not a list of strings.
+        - TypeError: If the given country is not in the dataset.
+        - TypeError: If the list of countries is empty.
         """
+        if not isinstance(countries, list):
+            raise TypeError("The given argument 'countries' is not a list")
+
+        if isinstance(countries, list):
+            # only allowing 3 countries or less
+            if len(countries) > 3:
+                raise TypeError(
+                    "The given argument 'countries' can only contain up to 3 countries. "
+                    "Please reduce the number of counries."
+                )
+            # checking if the counries are str
+            for element in countries[:]:
+                if not isinstance(element, str):
+                    raise TypeError(
+                        "The given argument 'countries' is not a list of strings"
+                    )
+                # removing counries that aren't in dataset
+                if element not in self.country_list():
+                    countries.remove(element)
+
+            # Reminding user, which countries are available, if list is empty from beginning on
+            # or if all countries were removed because they weren't part of list
+            if len(countries) == 0:
+                raise TypeError(
+                    "Please choose three of the following countries: "
+                    + ", ".join(self.country_list())
+                )
+
+            warnings.filterwarnings("ignore")
+
+            # Year and tfp columns, year as index
+            data = self.data[['Year', 'Entity', 'tfp']]
+            data.set_index('Year', inplace=True)
+
+            colors = ["#ff7f0e", "#1f77b4", "#2ca02c"]
+
+            fig, axis = plt.subplots(figsize=(10, 6))
+            for i, country in enumerate(countries):
+                tfp = data[data['Entity'] == country]['tfp']
+                tfp.plot(ax=axis, label=country, color=colors[i])
+
+            # fit ARIMA model and predict
+            for i, country in enumerate(countries):
+                tfp = data[data['Entity'] == country]['tfp']
+                model = auto_arima(tfp, seasonal=False, error_action='ignore',
+                                   suppress_warnings=True)
+                predictions = model.predict(n_periods=31)
+                plt.plot(range(2019, 2050), predictions, label='', linestyle='--', color=colors[i])
+
+            axis.set_xlabel('Year')
+            axis.set_ylabel('TFP')
+            axis.set_title('Total Factor productivity by Country with ARIMA Predictions')
+            plt.legend()
+            plt.show()
