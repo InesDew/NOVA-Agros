@@ -43,17 +43,16 @@ Software tools on which our code finds grounding and are essential for it to run
 After creating a  "Group_16" repository, we initialized the repository with a README.md file, a proper license, and a .gitignore for python. Ines, who created the repository gave the __Maintainer__ permissions to all of us. And we cloned the repository to our own laptops. 
 
 We created a class __Agros()__ in the __group_16.py__ file, which contains several methods developed in sub branches. 
-- [ ] One method  __data_setup()__ , downloads the data file into a downloads/ directory in the root directory of the project (main project directory). If the data file already exists, the method will not download it again. This method also reads the dataset into a pandas dataframe which is an attribute of our class Agros().
-
+- [ ] One method  __data_setup__ , downloads the data file into a downloads/ directory in the root directory of the project (main project directory). If the data file already exists, the method will not download it again. This method also reads the dataset into a pandas dataframe which is an attribute of our class Agros().
 - [ ] A second method __country_list__ that outputs a list of the available countries in the data set was created.
 - [ ] A third method __correlate_quantities__ that plots a way to correlate the "\_quantity" columns was written.
 - [ ] A fourth method __output_area_plot__ is created, that plots an area chart of the distinct "\_output_" columns over the years (x-axis). This method receives two arguments: a country argument and a normalize argument. When the country argument is *NONE* or 'World', the sum for all *distinct* countries is plotted. If the normalize statement is True, the output in relative terms is plotted, so for each year, the output is always 100% If the chosen country does not exist, the method returns a ValueError.
 - [ ] A fifth method __output_over_time__ receives a string with a country or a list of country strings. This method compares the total of the "\_output_" columns for each of the chosen countries over the years (x-axis) and plots it, so a comparison can be made.
 - [ ] A sixth method  __gapminder__ is developed and is a reference to the famous [gapminder tools](https://www.gapminder.org/tools/#$chart-type=bubbles&url=v1). It receives an argument year which must be an int. If the received argument is not an int, the method raises a TypeError. It plots a scatter plot where x is fertilizer_quantity, y is output_quantity, and the area of each dot is __animal_feed_quantity__.
 
-After we created the group_16.py file, we created a showcase notebook __Showcase_group_16__, which imports the Agros class showcases all the methods we developed. It tells a story about our analysis and findings. 
+After we created the group_16.py file, we created a showcase notebook __Showcase_group_16__, which imports the Agros class and showcases all the methods we developed. It tells a story about our analysis and findings. 
 - Through the gapminder plot for the most recent year 2019, we show world's agricultural production. 
-- We analysed the three countries Norway, __**** countries**** !!!__ from three different continents in more detail. We used the fourth and fifth  methods to illustrate each country and we point out the main differences
+- We analysed the three countries __Norway, Brazil and India__ from three different continents in more detail. We used the fourth and fifth  methods to illustrate each country and we point out the main differences
 - Then, we use the third method to show how the variables correlate with each other.
 
 We wrap up the first day with a very short overall analysis between quantities and outputs.
