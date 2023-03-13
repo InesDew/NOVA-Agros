@@ -8,7 +8,7 @@ __Team Members__
 
 
 # Welcome to project Agros
-Hello! We are four students from Nova SBE and we participated in a __two day hackathon__ promoted to study the agricultural output of several countries. We want to contribute to the green transition by having a more savvy taskforce, so we decided to create a python class Agros () for the challenge. The class has 6 different methods for performing various agricultural analyses. The class is defined in the file group_19.py.
+Hello! We are four students from Nova SBE and we participated in a __two day hackathon__ promoted to study the agricultural output of several countries. We want to contribute to the green transition by having a more savvy taskforce, so we decided to create a python class Agros () for the challenge. The class has 8 different methods for performing various agricultural analyses. The class is defined in the file group_19.py.
 
 Additionally, the repository contains a Jupyter Notebook Showcase_Group_16.ipynb which showcases the usage of the Agros() class.
 
@@ -25,7 +25,6 @@ To start using this project, you will need to follow these steps:
 2) Install the required packages listed in the requirements section.
 3) Import the Agros() class from the group_19 module into your Python script or Jupyter Notebook
 
-TBD
 
 # Compliance
 - The whole project is __PEP8 compliant__. 
