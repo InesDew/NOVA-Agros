@@ -8,14 +8,22 @@ __Team Members__
 
 
 # Welcome to project Agros
-Hello! We are four students from Nova SBE and we participated in a __two day hackathon__ promoted to study the agricultural output of several countries. We want to contribute to the green transition by having a more savvy taskforce, so we decided to create a python class for the challenge. The following file will guide you through the different methods of our analysis.
+Hello! We are four students from Nova SBE and we participated in a __two day hackathon__ promoted to study the agricultural output of several countries. We want to contribute to the green transition by having a more savvy taskforce, so we decided to create a python class Agros () for the challenge. The class has 6 different methods for performing various agricultural analyses. The class is defined in the file group_19.py.
+
+Additionally, the repository contains a Jupyter Notebook Showcase_Group_16.ipynb which showcases the usage of the Agros() class.
+
 
 # Sources
 For this project, we used the data from [Our World in Data](https://ourworldindata.org/). The dataset can be found [here](https://github.com/owid/owid-datasets/blob/master/datasets/Agricultural%20total%20factor%20productivity%20(USDA)/Agricultural%20total%20factor%20productivity%20(USDA).csv).
 The data can be ckecked in detail [here](https://github.com/owid/owid-datasets/tree/master/datasets/Agricultural%20total%20factor%20productivity%20(USDA)).
 
 # How to start using our project
-WIP
+
+To start using this project, you will need to follow these steps:
+
+1) Clone this repository to your local machine using Git or download the zip file and extract it.
+2) Install the required packages listed in the requirements section.
+3) Import the Agros() class from the group_19 module into your Python script or Jupyter Notebook
 
 TBD
 
@@ -41,12 +49,12 @@ Software tools on which our code finds grounding and are essential for it to run
 After creating a  "Group_16" repository, we initialized the repository with a README.md file, a proper license, and a .gitignore for python. Ines, who created the repository gave the __Maintainer__ permissions to all of us. And we cloned the repository to our own laptops. 
 
 We created a class __Agros()__ in the __group_16.py__ file, which contains several methods developed in sub branches. 
-- [ ] One method  __data_setup__ , downloads the data file into a downloads/ directory in the root directory of the project (main project directory). If the data file already exists, the method will not download it again. This method also reads the dataset into a pandas dataframe which is an attribute of our class Agros().
-- [ ] A second method __country_list__ that outputs a list of the available countries in the data set was created.
-- [ ] A third method __correlate_quantities__ that plots a way to correlate the "\_quantity" columns was written.
-- [ ] A fourth method __output_area_plot__ is created, that plots an area chart of the distinct "\_output_" columns over the years (x-axis). This method receives two arguments: a country argument and a normalize argument. When the country argument is *NONE* or 'World', the sum for all *distinct* countries is plotted. If the normalize statement is True, the output in relative terms is plotted, so for each year, the output is always 100% If the chosen country does not exist, the method returns a ValueError.
-- [ ] A fifth method __output_over_time__ receives a string with a country or a list of country strings. This method compares the total of the "\_output_" columns for each of the chosen countries over the years (x-axis) and plots it, so a comparison can be made.
-- [ ] A sixth method  __gapminder__ is developed and is a reference to the famous [gapminder tools](https://www.gapminder.org/tools/#$chart-type=bubbles&url=v1). It receives an argument year which must be an int. If the received argument is not an int, the method raises a TypeError. It plots a scatter plot where x is fertilizer_quantity, y is output_quantity, and the area of each dot is animal_feed_quantity.
+- [ ] 1. Method:   __data_setup__ , downloads the data file into a "downloads/" directory in the root directory of the project (main project directory). If the data file already exists, the method will not download it again. This method also reads the dataset into a pandas dataframe which is an attribute of our class Agros().
+- [ ] 2. Method: __country_list__, outputs a list of the available countries in the data set was created.
+- [ ] 3. Method: __correlate_quantities__, plots a way to correlate the "\_quantity" columns.
+- [ ] 4. Method: __output_area_plot__, plots an area chart of the distinct "\_output_" columns over the years (x-axis). This method receives two arguments: a country argument and a normalize argument. When the country argument is *NONE* or 'World', the sum for all *distinct* countries is plotted. If the normalize statement is True, the output in relative terms is plotted, so for each year, the output is always 100% If the chosen country does not exist, the method returns a ValueError.
+- [ ] 5. Method: __output_over_time__, receives a string with a country or a list of country strings. This method compares the total of the "\_output_" columns for each of the chosen countries over the years (x-axis) and plots it, so a comparison can be made.
+- [ ] 6. Method:__gapminder__, is a reference to the famous [gapminder tools](https://www.gapminder.org/tools/#$chart-type=bubbles&url=v1). It receives an argument year which must be an int. If the received argument is not an int, the method raises a TypeError. It plots a scatter plot where x is fertilizer_quantity, y is output_quantity, and the area of each dot is animal_feed_quantity.
 
 After we created the group_16.py file, we created a showcase notebook __Showcase_group_16__, which imports the Agros class and showcases all the methods we developed. It tells a story about our analysis and findings. 
 - Through the gapminder plot for the most recent year 2019, we show world's agricultural production. 
@@ -67,8 +75,8 @@ After implementing the feedback from Day 1 and adjusting the methods, we also ch
 
 # Day 2
 - [ ] As we now will be using geodata, we altered the download data method so that it also downloads and reads a geographical dataset. The geo dataset has the polygons for as many countries as possible and we downloaded it [here](https://www.naturalearthdata.com). We then merged the agricultural data with the geodata on the countries and made a **VARIABLE** of the class called *merge_dict* which is a dictionary that renames at least one country
-- [ ] We created another method called __choropleth__ which receives a year as input and raises and Error if year is not an integer. The method plots the tfp variable on a world map and uses a colorbar.
-- [ ] We also made __predictor__ method that receives a list of countries (max 3) as input, plots the tfp in the dataset and then complement it with an ARIMA prediction up to 2050 where the same color for each country's actual and predicted data, but a different line style is used. If one or more countries on the list is not present in the Agricultural dataframe, it is ignored. If none is, an error message is raised, that reminds the user what countries are available. 
+- [ ] 7. Method: __choropleth__,receives a year as input and raises and Error if year is not an integer. The method plots the tfp variable on a world map and uses a colorbar.
+- [ ] 8. Method: __predictor__, receives a list of countries (max 3) as input, plots the tfp in the dataset and then complement it with an ARIMA prediction up to 2050 where the same color for each country's actual and predicted data, but a different line style is used. If one or more countries on the list is not present in the Agricultural dataframe, it is ignored. If none is, an error message is raised, that reminds the user what countries are available. 
 
 Then, we cleaned up our project:
 - We created a __yaml file__ with all the packages we used, which can be used to generate an environment where your code will be ran.
