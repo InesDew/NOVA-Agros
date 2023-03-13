@@ -48,7 +48,7 @@ We created a class __Agros()__ in the __group_16.py__ file, which contains sever
 - [ ] A third method __correlate_quantities__ that plots a way to correlate the "\_quantity" columns was written.
 - [ ] A fourth method __output_area_plot__ is created, that plots an area chart of the distinct "\_output_" columns over the years (x-axis). This method receives two arguments: a country argument and a normalize argument. When the country argument is *NONE* or 'World', the sum for all *distinct* countries is plotted. If the normalize statement is True, the output in relative terms is plotted, so for each year, the output is always 100% If the chosen country does not exist, the method returns a ValueError.
 - [ ] A fifth method __output_over_time__ receives a string with a country or a list of country strings. This method compares the total of the "\_output_" columns for each of the chosen countries over the years (x-axis) and plots it, so a comparison can be made.
-- [ ] A sixth method  __gapminder__ is developed and is a reference to the famous [gapminder tools](https://www.gapminder.org/tools/#$chart-type=bubbles&url=v1). It receives an argument year which must be an int. If the received argument is not an int, the method raises a TypeError. It plots a scatter plot where x is fertilizer_quantity, y is output_quantity, and the area of each dot is __animal_feed_quantity__.
+- [ ] A sixth method  __gapminder__ is developed and is a reference to the famous [gapminder tools](https://www.gapminder.org/tools/#$chart-type=bubbles&url=v1). It receives an argument year which must be an int. If the received argument is not an int, the method raises a TypeError. It plots a scatter plot where x is fertilizer_quantity, y is output_quantity, and the area of each dot is animal_feed_quantity.
 
 After we created the group_16.py file, we created a showcase notebook __Showcase_group_16__, which imports the Agros class and showcases all the methods we developed. It tells a story about our analysis and findings. 
 - Through the gapminder plot for the most recent year 2019, we show world's agricultural production. 
@@ -78,7 +78,7 @@ Then, we cleaned up our project:
 - We updated the __README.md__ to tell the user how to start using our project.
 
 Finally, we finished up our project:
-- We started by overall analysis with the gapminder plot for the most recent year and the year 1980. The major changes regarding the variables we considered the most relevant on day 1 __Insert variable__ are explained.
+- We started by overall analysis with the gapminder plot for the most recent year and the year 1980. The major changes regarding the variables we considered the most relevant on day 1 animal_feed_quantity are explained.
 - We then applied the two new methods to the three selected countries from day 1 to explain their evolution of s agricultural data further and wrote a small story about it.
 - We then showed the cloropleth for the year 2019 and the year 2000
 - We finished our analysis with the analysis of the output of the predictor method.
