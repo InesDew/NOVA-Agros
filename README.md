@@ -2,13 +2,13 @@
 __Team Members__
 
 53676 Celina Kollwitz
-53676@novasbe.pt
+53676@novasbe.pt  
 55577 Helena Krumm  
-55577@novasbe.pt
+55577@novasbe.pt  
 55913 Ronja Suhling  
-55913@novasbe.pt
+55913@novasbe.pt  
 55944 Ines Dewever  
-55913@novasbe.pt
+55913@novasbe.pt  
 
 
 # Welcome to project Agros
