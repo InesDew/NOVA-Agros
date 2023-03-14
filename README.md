@@ -1,7 +1,7 @@
 # Group 16
 __Team Members__
 
-53676 Celina Kollwitz
+53676 Celina Kollwitz  
 53676@novasbe.pt  
 55577 Helena Krumm  
 55577@novasbe.pt  
