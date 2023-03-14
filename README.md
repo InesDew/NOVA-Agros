@@ -23,7 +23,7 @@ To start using this project, you will need to follow these steps:
 
 1) Clone this repository to your local machine using Git or download the zip file and extract it.
 2) Create the ProjectAgrosEnvironment in your conda through the environment.yml file, which installs all the required packages listed in the requirements section.
-3) Import the Agros() class from the group_19 module into your Python script or Jupyter Notebook or start using the Showcase_Group_16 notebook to see our analysis.
+3) Import the Agros() class from the group_16 module into your Python script or Jupyter Notebook or start using the Showcase_Group_16 notebook to see our analysis.
 
 
 # Compliance
