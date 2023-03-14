@@ -1,10 +1,14 @@
 # Group 16
 __Team Members__
 
-53676 Celina Kollwitz  
+53676 Celina Kollwitz
+53676@novasbe.pt
 55577 Helena Krumm  
+55577@novasbe.pt
 55913 Ronja Suhling  
+55913@novasbe.pt
 55944 Ines Dewever  
+55913@novasbe.pt
 
 
 # Welcome to project Agros
@@ -83,7 +87,9 @@ Then, we cleaned up our project:
 - We updated the __README.md__ to tell the user how to start using our project.
 
 Finally, we finished up our project:
-- We started by overall analysis with the gapminder plot for the most recent year and the year 1980. The major changes regarding the variables we considered the most relevant on day 1 animal_feed_quantity are explained.
-- We then applied the two new methods to the three selected countries from day 1 to explain their evolution of s agricultural data further and wrote a small story about it.
-- We then showed the cloropleth for the year 2019 and the year 2000
-- We finished our analysis with the analysis of the output of the predictor method.
+- Before starting our analysis, we showed the data used for the analysis in a dataframe and showed a list of all the countries in the dataset.
+- We started by overall analysis with the gapminder plot for the most recent year 2019 and the year 1980. The major changes regarding the variables we considered the most relevant on day 1 and animal_feed_quantity are explained.
+- We then applied the two new methods (output_area_plot & output_over_time) to the three selected countries from day 1 (Norway, Brazil, India) to explain their agricultural evolution further and wrote a small story about it.
+- After the analysis of day 1, we took a look at the correlation between the _quantity columns
+- On day 2 of the project, we continued our analysis and showed the choropleth for the year 2019 and the year 2000
+- Finally, we finished our project with analyzing of the output of the predictor method.
