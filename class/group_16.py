@@ -490,7 +490,10 @@ class Agros:
         else:
             plt.xlabel("Fertilizer Quantity")
             plt.ylabel("Output Quantity")
-
+        
+        plt.annotate('Source: Agricultural total factor productivity, 2022 USDA', (0,0),
+                     (-80,-20), fontsize=6, xycoords='axes fraction',
+                     textcoords='offset points', va='top')
         plt.show()
 
     def choropleth(self, year: int) -> None:
@@ -597,4 +600,7 @@ class Agros:
             axis.set_ylabel('TFP')
             axis.set_title('Total Factor productivity by Country with ARIMA Predictions')
             plt.legend()
+            plt.annotate('Source: Agricultural total factor productivity, 2022 USDA', (0,0),
+                         (-80,-20), fontsize=6, xycoords='axes fraction',
+                         textcoords='offset points', va='top')
             plt.show()
