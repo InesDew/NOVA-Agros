@@ -8,7 +8,7 @@ __Team Members__
 55913 Ronja Suhling  
 55913@novasbe.pt  
 55944 Ines Dewever  
-55913@novasbe.pt  
+55944@novasbe.pt  
 
 
 # Welcome to project Agros
