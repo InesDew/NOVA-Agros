@@ -1,0 +1,460 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>group_16 module &mdash; Group_16 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Group_16
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">group_16 module</a><ul>
+<li><a class="reference internal" href="#dependencies">Dependencies:</a></li>
+<li><a class="reference internal" href="#classes">Classes:</a></li>
+<li><a class="reference internal" href="#methods">Methods:</a></li>
+<li><a class="reference internal" href="#raises">Raises:</a></li>
+<li><a class="reference internal" href="#examples">Examples:</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Group_16</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>group_16 module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/group_16.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="module-group_16">
+<span id="group-16-module"></span><h1>group_16 module<a class="headerlink" href="#module-group_16" title="Permalink to this heading">¶</a></h1>
+<p>The Agros module provides a class that can be used to download,
+load, and analyze agricultural productivity data from the OWID
+repository.</p>
+<section id="dependencies">
+<h2>Dependencies:<a class="headerlink" href="#dependencies" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>os</p></li>
+<li><p>pandas</p></li>
+<li><p>requests</p></li>
+<li><p>matplotlib.pyplot</p></li>
+<li><p>numpy</p></li>
+<li><p>seaborn</p></li>
+<li><p>typing</p></li>
+<li><p>statsmodels.tsa.arima.model</p></li>
+<li><p>geopandas</p></li>
+<li><p>warnings</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="classes">
+<h2>Classes:<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div><p>Agros</p>
+</div></blockquote>
+</section>
+<section id="methods">
+<h2>Methods:<a class="headerlink" href="#methods" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div><dl class="simple">
+<dt>data_setup() -&gt; None:</dt><dd><p>Downloads the agricultural productivity dataset from the OWID repository
+and stores it in a local directory called ‘downloads’. If the directory
+doesn’t exist, it creates one. Then, it loads the dataset into a pandas
+DataFrame and assigns it to the ‘data’ attribute of the object.</p>
+</dd>
+<dt>country_list() -&gt; List[str]:</dt><dd><p>Returns a list of unique country names present in the dataset.</p>
+</dd>
+<dt>correlate_quantities() -&gt; None:</dt><dd><p>Computes the correlation matrix between various agricultural quantities
+using data in the data attribute of the object. It then creates a heatmap
+plot of the correlation matrix using seaborn.</p>
+</dd>
+<dt>output_area_plot(country: str = None, normalize: bool = False) -&gt; None:</dt><dd><p>Creates a stacked area plot of crop, animal, and fish output for a given
+country or the world over time. If the normalize parameter is set to True,
+the plot will show the proportion of each output type instead of the raw output values.
+Raises a TypeError if the country parameter is not a string or if the normalize parameter
+is not a boolean. Raises a ValueError if the country parameter is not in the dataset.</p>
+</dd>
+<dt>output_over_time(countries: Union[str, List[str]]) -&gt; None:</dt><dd><p>Displays a line plot of the total output over time for one or more countries.
+Raises a TypeError if the argument countries is not a list or a string, or if the elements
+in the list are not strings.
+Raises a ValueError if any of the country names in the argument countries is not present
+in the dataset.</p>
+</dd>
+<dt>gapminder(year: int, log_scale: bool = False) -&gt; None:</dt><dd><p>Plots a scatter plot to visualize the relationship between the usage of fertilizer, animal
+feed, and the agricultural output for a given year. The size of the points represents the
+animal feed quantity.
+Raises a TypeError if the year argument is not an integer.</p>
+</dd>
+<dt>choropleth(year: int) -&gt; None:</dt><dd><p>Creates a choropleth map of total factor productivity (TFP) by country for the given year.</p>
+</dd>
+<dt>predictor(countries: List[str]) -&gt; None:</dt><dd><p>Plots the TFP column of the dataset for a given list of countries and predicts the TFP
+values for the next 30 years using the ARIMA model.</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="raises">
+<h2>Raises:<a class="headerlink" href="#raises" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div><p>TypeError: If the country parameter of output_area_plot() is not a string or if the
+normalize parameter is not a boolean.
+ValueError: If the country parameter of output_area_plot() is not in the dataset.
+TypeError: If the argument countries of output_over_time() is not a list or a string,
+or if the elements in the list are not strings.
+ValueError: If any of the country names in argument countries of output_over_time() is
+not present in the dataset.
+TypeError: if the year argument of gapminder() is not an integer.</p>
+</div></blockquote>
+</section>
+<section id="examples">
+<h2>Examples:<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div><p># Create an instance of Agros
+agros = Agros()</p>
+<p># Download and load the agricultural productivity dataset from the OWID repository
+agros.data_setup()</p>
+<p># Display a list of unique country names present in the dataset
+countries = agros.country_list()
+print(countries)</p>
+<p># Compute the correlation matrix and plot it as a heatmap
+agros.correlate_quantities()</p>
+<p># Create a stacked area plot of crop, animal, and fish output for a given country
+or the world over time
+agros.output_area_plot(country=’United States’, normalize=True)</p>
+<p># Display a line plot of the total output over time for one or more countries
+agros.output_over_time(countries=[‘India’, ‘China’])</p>
+<p># Display a scatter plot to visualize the relationship between the usage of fertilizer,
+animal feed, and the agricultural output for 1990.
+agros.gapminder(1990)</p>
+<p># Create a choropleth map of total factor productivity (TFP) by country for 1995.
+agros.choropleth(1995)</p>
+<p># Plot the TFP column of the dataset and predict the TFP values for the next
+30 years using the ARIMA model.
+agors.predictor(‘Germany’, ‘Belgium’)</p>
+</div></blockquote>
+<dl class="py class">
+<dt class="sig sig-object py" id="group_16.Agros">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">group_16.</span></span><span class="sig-name descname"><span class="pre">Agros</span></span><a class="headerlink" href="#group_16.Agros" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The Agros class provides methods to download and load agricultural productivity
+data from the OWID repository, compute a correlation matrix and a stacked area
+plot, and display a line plot of the total output over time for one or more countries.</p>
+<p>data: a pandas DataFrame object that stores the agricultural productivity dataset.</p>
+<p>data_setup(): Downloads the agricultural productivity dataset from the OWID repository
+and stores it in a local directory called ‘downloads’. If the directory doesn’t exist,
+it creates one. Then, it loads the dataset into a pandas DataFrame and assigns it to
+the ‘data’ attribute of the object.
+country_list(): Returns a list of unique country names present in the dataset.
+correlate_quantities(): Computes the correlation matrix between various agricultural
+quantities using data in the data attribute of the object. It then creates a heatmap
+plot of the correlation matrix using seaborn.
+output_area_plot(country: str = None, normalize: bool = False): Creates a stacked area
+plot of crop, animal, and fish output for a given country or the world over time. If the
+normalize parameter is set to True, the plot will show the proportion of each output type
+instead of the raw output values.
+output_over_time(countries: Union[str, List[str]]): Displays a line plot of the total output
+over time for one or more countries.
+gapminder(self, year: int, log_scale: bool = False) -&gt; None: Plots a scatterplot of fertilizer
+usage and output quantity, with the size of the points representing animal feed quantity,
+for a given year in the dataset.
+choropleth(self, year: int) -&gt; None: Creates a choropleth map of total factor productivity
+(TFP) by country for the given year.
+predictor(self, countries: List[str]) -&gt; None: Plots the tfp column of the dataset for the
+list of 3 countries that was given as an argument and complements it with an AutoArima
+prediction up to 2050.</p>
+<p>TypeError: if the country parameter is not a string, the year is not an integer or if the
+normalize parameter is not a boolean.
+ValueError: if the country parameter is not in the dataset.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="group_16.Agros.choropleth">
+<span class="sig-name descname"><span class="pre">choropleth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#group_16.Agros.choropleth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a choropleth map of total factor productivity (TFP) by country for the given year.</p>
+<p>year (int): The year to create the choropleth map for.</p>
+<p>TypeError: If the given argument ‘year’ is not an integer.</p>
+<p>None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="group_16.Agros.correlate_quantities">
+<span class="sig-name descname"><span class="pre">correlate_quantities</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#group_16.Agros.correlate_quantities" title="Permalink to this definition">¶</a></dt>
+<dd><p>The correlate_quantities method computes the correlation matrix between various
+agricultural quantities using data in the data attribute of the object. It then creates
+a heatmap plot of the correlation matrix using seaborn.</p>
+<p>None</p>
+<p>None.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="group_16.Agros.country_list">
+<span class="sig-name descname"><span class="pre">country_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#group_16.Agros.country_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>The method country_list returns a list of unique country names present in the dataset.</p>
+<p>A list of unique country names present in the dataset.</p>
+<p>None.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="group_16.Agros.data_setup">
+<span class="sig-name descname"><span class="pre">data_setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#group_16.Agros.data_setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up the data for further analysis. This method creates a downloads folder, downloads
+a dataset from an external URL, cleans it, merges it with a geographical dataset, and
+stores the resulting merged dataset as a Pandas DataFrame in the <cite>data</cite> attribute of the
+class instance.</p>
+<p>None</p>
+<p>None</p>
+<ul class="simple">
+<li><p>self: An instance of the class.</p></li>
+</ul>
+<ul class="simple">
+<li><p>Call the method on an instance of the class it is defined in.</p></li>
+</ul>
+<p>my_instance = MyClass()
+my_instance.data_setup()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="group_16.Agros.gapminder">
+<span class="sig-name descname"><span class="pre">gapminder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#group_16.Agros.gapminder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a scatterplot of fertilizer usage and output quantity, with the size of the
+points representing animal feed quantity, for a given year in the dataset. The
+scatterplot can be plotted on a log scale if desired.</p>
+<blockquote>
+<div><p>year (int): The year to plot the data for.
+log_scale (bool): Whether to plot the scatterplot on a log scale. Defaults to False.</p>
+</div></blockquote>
+<blockquote>
+<div><p>TypeError: If the ‘year’ argument is not an integer.</p>
+</div></blockquote>
+<blockquote>
+<div><p>None</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="group_16.Agros.output_area_plot">
+<span class="sig-name descname"><span class="pre">output_area_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#group_16.Agros.output_area_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>The output_area_plot method creates a stacked area plot of crop, animal, and fish
+output for a given country or the world over time. If the normalize parameter is
+set to True, the plot will show the proportion of each output type instead of the
+raw output values.</p>
+<p>country (str, optional): Name of the country to plot data for. If not specified or
+set to “World”, the data for the entire world will be plotted. Default is None.
+normalize (bool, optional): If True, the output values will be normalized to show the
+percentage of each output type. If False, the raw output values will be shown.
+Default is False.</p>
+<p>TypeError: If country is not a string or normalize is not a boolean.
+ValueError: If country is not in the dataset.</p>
+<p>None.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="group_16.Agros.output_over_time">
+<span class="sig-name descname"><span class="pre">output_over_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">countries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#group_16.Agros.output_over_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>The output_over_time method takes a list of country names or a string of
+space-separated country names and displays a line plot of the total output
+over time for each country.</p>
+<p>countries: A list of country names or a string of space-separated country names.</p>
+<p>TypeError: If the argument countries is not a list or a string, or if the elements
+in the list are not strings.
+ValueError: If any of the country names in countries is not present in the dataset.</p>
+<p>None.</p>
+<p>Displays a line plot of the total output over time for each country in the input list.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="group_16.Agros.predictor">
+<span class="sig-name descname"><span class="pre">predictor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">countries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#group_16.Agros.predictor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the tfp column of the dataset for the list of 3 countries that was given as
+an argument and complements it with an AutoArima prediction up to 2050.</p>
+<ul class="simple">
+<li><p>self: An instance of the Agro class.</p></li>
+<li><p>countries (List[str]): A list of 1-3 country names (str) to plot the tfp for.</p></li>
+</ul>
+<ul class="simple">
+<li><p>None</p></li>
+</ul>
+<ul class="simple">
+<li><p>TypeError: If the given argument ‘countries’ is not a list.</p></li>
+<li><p>TypeError: If the given argument ‘countries’ can only contain up to 3 countries.</p></li>
+<li><p>TypeError: If the given argument ‘countries’ is not a list of strings.</p></li>
+<li><p>TypeError: If the given country is not in the dataset.</p></li>
+<li><p>TypeError: If the list of countries is empty.</p></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2023, Celina Kollwitz, Helena Krumm, Ronja Suhling, Ines Dewever
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
